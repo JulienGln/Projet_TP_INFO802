@@ -11,15 +11,29 @@ export default function Map() {
 
   useEffect(() => {
     if (!mapRef.current) {
-      mapRef.current = L.map("map", { zoom: 13 }).setView(
-        [48.8566, 2.3522],
-        13
+      mapRef.current = L.map("map", { zoom: 5 }).setView(
+        [46.227638, 2.213749],
+        5
       );
 
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: "© OpenStreetMap contributors",
-      }).addTo(mapRef.current);
+      const tileLayer = L.tileLayer(
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {
+          attribution: "© OpenStreetMap contributors",
+        }
+      );
+
+      tileLayer.on("load", function () {
+        // La carte est entièrement chargée
+        mapRef.current.invalidateSize();
+      });
+      tileLayer.addTo(mapRef.current);
     }
+
+    mapRef.current.on("load", function () {
+      // La carte est entièrement chargée
+      mapRef.current.invalidateSize();
+    });
 
     // Ajoutez un écouteur d'événements pour le zoom
     mapRef.current.on("zoomend", function () {
@@ -28,5 +42,25 @@ export default function Map() {
     });
   }, []);
 
-  return <div id="map" style={{ height: "500px", width: "50%" }}></div>;
+  return (
+    <div
+      id="map-container"
+      style={{
+        height: "500px",
+        width: "50%",
+        maxWidth: "50%",
+        maxHeight: "500px",
+        overflow: "hidden",
+      }}
+    >
+      <div
+        id="map"
+        style={{
+          height: "100%",
+          width: "100%",
+        }}
+        className="border rounded"
+      ></div>
+    </div>
+  );
 }
