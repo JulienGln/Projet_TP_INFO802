@@ -5,6 +5,8 @@ export default function FormTrajet() {
   const [tempsTrajet, setTempsTrajet] = useState(0);
   const [villeA, setVilleA] = useState("");
   const [villeB, setVilleB] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
   const [optionsVilles, setOptionsVilles] = useState([]);
   const [isVillesLoading, setIsVillesLoading] = useState(true);
   // const optionsVilles = [
@@ -28,6 +30,19 @@ export default function FormTrajet() {
       res.push({ value: villes[i].nom, label: villes[i].nom });
     }
     setOptionsVilles(res);
+  }
+
+  function handleSearchChange(e) {
+    const term = e.target.value;
+    setSearchTerm(term);
+
+    // Effectuer la recherche dans le fichier JSON
+    const results = optionsVilles.filter((ville) =>
+      ville.label.toLowerCase().includes(term.toLowerCase())
+    );
+
+    // Mettre à jour les résultats de la recherche
+    term !== "" ? setSearchResults(results) : setSearchResults([]);
   }
 
   function handleVilleAChange(event) {
@@ -55,6 +70,28 @@ export default function FormTrajet() {
 
   return (
     <div>
+      <form className="form-floating">
+        <input
+          type="search"
+          autoComplete="off"
+          placeholder="Départ"
+          onChange={handleSearchChange}
+          value={searchTerm}
+        />
+        <ul
+          style={{
+            listStyle: "none",
+            width: "100%",
+            borderRadius: "4px",
+            overflow: "hidden",
+          }}
+        >
+          {searchResults.map((result, index) => (
+            <li key={index}>{result.label}</li>
+          ))}
+        </ul>
+      </form>
+
       <form className="form-floating m-3">
         {!isVillesLoading ? (
           <div id="villes">
