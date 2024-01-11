@@ -39,6 +39,7 @@ export default function FormTrajet() {
   }
 
   useEffect(() => {
+    // fetch("https://geo.api.gouv.fr/communes") => très bien mais très lent !
     fetch("https://geo.api.gouv.fr/departements/73/communes")
       .then((response) => response.json())
       .then((data) => {
