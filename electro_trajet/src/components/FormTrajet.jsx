@@ -5,7 +5,7 @@ export default function FormTrajet() {
   const [tempsTrajet, setTempsTrajet] = useState(0);
   const [villeA, setVilleA] = useState("");
   const [villeB, setVilleB] = useState("");
-  const [optionsVilles, setOptionVilles] = useState([]);
+  const [optionsVilles, setOptionsVilles] = useState([]);
   const [isVillesLoading, setIsVillesLoading] = useState(true);
   // const optionsVilles = [
   //   { value: "chambery", label: "Chambéry" },
@@ -18,6 +18,18 @@ export default function FormTrajet() {
     { value: "peugeot", label: "Peugeot e-208" },
   ]; // à chercher dynamiquement
 
+  /**
+   * Formate les données JSON de l'API pour le composant React Select
+   * @param {JSON} villes les villes renvoyées par l'API
+   */
+  function formatageVilles(villes) {
+    var res = [];
+    for (let i = 0; i < villes.length; i++) {
+      res.push({ value: villes[i].nom, label: villes[i].nom });
+    }
+    setOptionsVilles(res);
+  }
+
   function handleVilleAChange(event) {
     setVilleA(event.value);
   }
@@ -27,10 +39,11 @@ export default function FormTrajet() {
   }
 
   useEffect(() => {
-    fetch("https://geo.api.gouv.fr/departements/01/communes")
+    fetch("https://geo.api.gouv.fr/departements/73/communes")
       .then((response) => response.json())
       .then((data) => {
-        setOptionVilles(data);
+        //setOptionsVilles(data);
+        formatageVilles(data);
         setIsVillesLoading(false); // Les données sont récupérées, on met isLoading à false
       })
       .catch((error) => {

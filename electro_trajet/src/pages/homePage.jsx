@@ -7,7 +7,7 @@ export default function Home() {
     <div>
       <h1
         style={{ backgroundColor: "blueviolet", color: "white" }}
-        className="p-5"
+        className="p-5 fw-light fs-1"
       >
         Electro'Trajet
       </h1>
