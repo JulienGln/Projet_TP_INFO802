@@ -8,12 +8,12 @@ afin d’effectuer son trajet.
 
 
 ### Services à mettre en œuvre
-1. Développez et déployez un service SOAP qui calcul un temps de trajet en fonction de la
+1. Développez et déployez un service **SOAP** qui calcul un temps de trajet en fonction de la
 distance et de l’autonomie des véhicules et en tenant compte du temps de
 chargement
-2. Interrogez un service REST qui fournit un emplacement de prise de rechargement
+2. Interrogez un service **REST** qui fournit un emplacement de prise de rechargement
 disponible à proximité de coordonnées GPS passées en paramètre.
-3. Interrogez un service REST de cartographie pour afficher le trajet du véhicule
-4. Interrogez un service en GraphQL qui fournit la liste des véhicules avec leurs
+3. Interrogez un service **REST** de cartographie pour afficher le trajet du véhicule
+4. Interrogez un service en **GraphQL** qui fournit la liste des véhicules avec leurs
 caractéristiques.
  
