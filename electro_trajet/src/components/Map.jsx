@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 // import Openrouteservice from "openrouteservice-js";
 import * as L from "leaflet";
+import "leaflet/dist/leaflet.css";
 
 export default function Map() {
   // const orsDirections = new Openrouteservice.Directions({
@@ -30,11 +31,6 @@ export default function Map() {
       tileLayer.addTo(mapRef.current);
     }
 
-    mapRef.current.on("load", function () {
-      // La carte est entièrement chargée
-      mapRef.current.invalidateSize();
-    });
-
     // Ajoutez un écouteur d'événements pour le zoom
     mapRef.current.on("zoomend", function () {
       // Ajustez la taille de la carte après le zoom
@@ -56,7 +52,7 @@ export default function Map() {
       <div
         id="map"
         style={{
-          height: "100%",
+          height: "100vh",
           width: "100%",
         }}
         className="border rounded"
