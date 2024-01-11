@@ -1,6 +1,11 @@
 import React from "react";
+import Openrouteservice from "openrouteservice-js";
 
 export default function Map() {
+  const orsDirections = new Openrouteservice.Directions({
+    api_key: "Votre clé API",
+  });
+
   return (
     <div>
       <iframe

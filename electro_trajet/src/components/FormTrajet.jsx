@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 
 export default function FormTrajet() {
+  const [tempsTrajet, setTempsTrajet] = useState(0);
   return (
     <div>
-      <form className="form-floating">
-        <div className="form-floating">
+      <form className="form-floating m-3">
+        <div className="form-floating m-3">
           {/* mettre un component select de react cf CISALB*/}
           <input
             type="text"
@@ -15,7 +16,7 @@ export default function FormTrajet() {
           />
           <label htmlFor="villeA">Départ</label>
         </div>
-        <div className="form-floating">
+        <div className="form-floating m-3">
           {/* mettre un component select de react cf CISALB*/}
           <input
             type="text"
@@ -26,7 +27,7 @@ export default function FormTrajet() {
           />
           <label htmlFor="villeB">Arrivée</label>
         </div>
-        <div className="form-floating">
+        <div className="form-floating m-3">
           {/* mettre un component select de react cf CISALB*/}
           <select className="form-select" id="vehicule">
             <option selected>Sélectionnez un véhicule</option>
@@ -37,6 +38,7 @@ export default function FormTrajet() {
           <label htmlFor="vehicule">Véhicule</label>
         </div>
       </form>
+      <p className="fw-bold">Temps de trajet : {tempsTrajet}</p>
     </div>
   );
 }
