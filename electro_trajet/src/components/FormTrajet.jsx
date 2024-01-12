@@ -71,25 +71,38 @@ export default function FormTrajet() {
   return (
     <div>
       <form className="form-floating">
-        <input
-          type="search"
-          autoComplete="off"
-          placeholder="Départ"
-          onChange={handleSearchChange}
-          value={searchTerm}
-        />
-        <ul
-          style={{
-            listStyle: "none",
-            width: "100%",
-            borderRadius: "4px",
-            overflow: "hidden",
-          }}
-        >
-          {searchResults.map((result, index) => (
-            <li key={index}>{result.label}</li>
-          ))}
-        </ul>
+        {!isVillesLoading ? (
+          <div id="villes">
+            <div id="villeA">
+              <input
+                type="search"
+                autoComplete="off"
+                placeholder="Départ"
+                onChange={handleSearchChange}
+                value={searchTerm}
+              />
+              <ul
+                style={{
+                  listStyle: "none",
+                  width: "100%",
+                  borderRadius: "4px",
+                  overflow: "hidden",
+                }}
+              >
+                {searchResults.map((result, index) => (
+                  <li key={index}>{result.label}</li>
+                ))}
+              </ul>
+            </div>
+            <div id="villeB">
+              <input type="search" autoComplete="off" placeholder="Arrivée" />
+            </div>
+          </div>
+        ) : (
+          <div className="spinner-border" role="status">
+            <span className="visually-hidden">Chargement...</span>
+          </div>
+        )}
       </form>
 
       <form className="form-floating m-3">
@@ -119,8 +132,8 @@ export default function FormTrajet() {
             </div>
           </div>
         ) : (
-          <div class="spinner-border" role="status">
-            <span class="visually-hidden">Chargement...</span>
+          <div className="spinner-border" role="status">
+            <span className="visually-hidden">Chargement...</span>
           </div>
         )}
         <div className="m-3">
