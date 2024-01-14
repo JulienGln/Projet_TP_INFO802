@@ -3,19 +3,15 @@ import Select from "react-select";
 
 export default function FormTrajet() {
   const [tempsTrajet, setTempsTrajet] = useState(0);
-  const [villeA, setVilleA] = useState("");
-  const [villeB, setVilleB] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [searchTermB, setSearchTermB] = useState("");
   const [searchResultsB, setSearchResultsB] = useState([]);
+  const [coordsVilleA, setCoordsVilleA] = useState({}); // coordonnées ville A et B
+  const [coordsVilleB, setCoordsVilleB] = useState({});
   const [optionsVilles, setOptionsVilles] = useState([]);
   const [isVillesLoading, setIsVillesLoading] = useState(true);
-  // const optionsVilles = [
-  //   { value: "chambery", label: "Chambéry" },
-  //   { value: "paris", label: "Paris" },
-  //   { value: "brest", label: "Brest" },
-  // ]; // à chercher dynamiquement
+
   const optionsVehicules = [
     { value: "tesla", label: "Tesla" },
     { value: "renault", label: "Renault Zoé" },
@@ -56,17 +52,57 @@ export default function FormTrajet() {
     term !== "" ? setSearchResultsB(results) : setSearchResultsB([]);
   }
 
-  function handleVilleAChange(event) {
-    setVilleA(event.value);
-  }
+  function handleChangeCoordsVille(position) {
+    if (position === "départ") {
+      const apiUrl = `https://api-adresse.data.gouv.fr/search/?q=${searchTerm}&limit=1`;
+      fetch(apiUrl)
+        .then((response) => response.json())
+        .then((data) => {
+          // Vérifiez si des résultats ont été retournés
+          if (data.features.length > 0) {
+            const firstResult = data.features[0];
+            const coords = firstResult.geometry.coordinates;
 
-  function handleVilleBChange(event) {
-    setVilleB(event.value);
+            const latitude = coords[1];
+            const longitude = coords[0];
+
+            // console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+            setCoordsVilleA({ lat: latitude, lon: longitude });
+          } else {
+            console.log("Aucun résultat trouvé pour la ville spécifiée.");
+          }
+        })
+        .catch((error) => {
+          console.error("Erreur lors de la requête API Adresse", error);
+        });
+    } else if (position === "arrivée") {
+      const apiUrl = `https://api-adresse.data.gouv.fr/search/?q=${searchTermB}&limit=1`;
+      fetch(apiUrl)
+        .then((response) => response.json())
+        .then((data) => {
+          // Vérifiez si des résultats ont été retournés
+          if (data.features.length > 0) {
+            const firstResult = data.features[0];
+            const coords = firstResult.geometry.coordinates;
+
+            const latitude = coords[1];
+            const longitude = coords[0];
+
+            // console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+            setCoordsVilleB({ lat: latitude, lon: longitude });
+          } else {
+            console.log("Aucun résultat trouvé pour la ville spécifiée.");
+          }
+        })
+        .catch((error) => {
+          console.error("Erreur lors de la requête API Adresse", error);
+        });
+    }
   }
 
   useEffect(() => {
-    // fetch("https://geo.api.gouv.fr/communes") => très bien mais très lent !
-    fetch("https://geo.api.gouv.fr/departements/73/communes")
+    // fetch("https://geo.api.gouv.fr/departements/73/communes") => pour tester
+    fetch("https://geo.api.gouv.fr/communes")
       .then((response) => response.json())
       .then((data) => {
         //setOptionsVilles(data);
@@ -112,6 +148,7 @@ export default function FormTrajet() {
                         onClick={() => {
                           setSearchTerm(result.label);
                           setSearchResults([]);
+                          handleChangeCoordsVille("départ");
                         }}
                         style={{ cursor: "pointer" }}
                       >
@@ -149,6 +186,7 @@ export default function FormTrajet() {
                         onClick={() => {
                           setSearchTermB(result.label);
                           setSearchResultsB([]);
+                          handleChangeCoordsVille("arrivée");
                         }}
                         style={{ cursor: "pointer" }}
                       >
