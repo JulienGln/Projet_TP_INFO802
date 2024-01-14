@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import Map from "../components/Map";
 import FormTrajet from "../components/FormTrajet";
 
 export default function Home() {
+  const [selectedCoordinates, setSelectedCoordinates] = useState(null);
+
+  function getCoordsFromForm(data) {
+    setSelectedCoordinates(data);
+  }
+
   return (
     <div>
       <h1
@@ -12,7 +18,7 @@ export default function Home() {
         Electro'Trajet
       </h1>
       <div className="d-flex flex-column flex-md-row justify-content-around">
-        <FormTrajet />
+        <FormTrajet giveCoordsToMap={getCoordsFromForm} />
         <Map />
       </div>
     </div>

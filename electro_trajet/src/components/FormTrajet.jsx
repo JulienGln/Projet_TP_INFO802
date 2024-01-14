@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Select from "react-select";
 
-export default function FormTrajet() {
+export default function FormTrajet({ giveCoordsToMap }) {
   const [tempsTrajet, setTempsTrajet] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -97,6 +97,10 @@ export default function FormTrajet() {
         .catch((error) => {
           console.error("Erreur lors de la requête API Adresse", error);
         });
+    }
+    // transmission des coordonnées à la map une fois les deux villes renseignées
+    if (coordsVilleA && coordsVilleB) {
+      giveCoordsToMap({ villeA: coordsVilleA, villeB: coordsVilleB });
     }
   }
 
