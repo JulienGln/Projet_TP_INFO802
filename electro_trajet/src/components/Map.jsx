@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from "react";
 import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-export default function Map() {
+export default function Map({ villes }) {
   // const orsDirections = new Openrouteservice.Directions({
   //   api_key: "Votre clé API",
   // });

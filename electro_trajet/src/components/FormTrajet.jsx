@@ -7,8 +7,8 @@ export default function FormTrajet({ giveCoordsToMap }) {
   const [searchResults, setSearchResults] = useState([]);
   const [searchTermB, setSearchTermB] = useState("");
   const [searchResultsB, setSearchResultsB] = useState([]);
-  const [coordsVilleA, setCoordsVilleA] = useState({}); // coordonnées ville A et B
-  const [coordsVilleB, setCoordsVilleB] = useState({});
+  const [coordsVilleA, setCoordsVilleA] = useState(null); // coordonnées ville A et B
+  const [coordsVilleB, setCoordsVilleB] = useState(null);
   const [optionsVilles, setOptionsVilles] = useState([]);
   const [isVillesLoading, setIsVillesLoading] = useState(true);
 

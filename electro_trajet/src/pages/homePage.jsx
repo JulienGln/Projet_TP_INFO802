@@ -19,7 +19,7 @@ export default function Home() {
       </h1>
       <div className="d-flex flex-column flex-md-row justify-content-around">
         <FormTrajet giveCoordsToMap={getCoordsFromForm} />
-        <Map />
+        <Map villes={selectedCoordinates} />
       </div>
     </div>
   );
