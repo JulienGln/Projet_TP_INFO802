@@ -7,6 +7,8 @@ export default function FormTrajet() {
   const [villeB, setVilleB] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [searchTermB, setSearchTermB] = useState("");
+  const [searchResultsB, setSearchResultsB] = useState([]);
   const [optionsVilles, setOptionsVilles] = useState([]);
   const [isVillesLoading, setIsVillesLoading] = useState(true);
   // const optionsVilles = [
@@ -36,13 +38,22 @@ export default function FormTrajet() {
     const term = e.target.value;
     setSearchTerm(term);
 
-    // Effectuer la recherche dans le fichier JSON
     const results = optionsVilles.filter((ville) =>
       ville.label.toLowerCase().includes(term.toLowerCase())
     );
 
-    // Mettre à jour les résultats de la recherche
     term !== "" ? setSearchResults(results) : setSearchResults([]);
+  }
+
+  function handleSearchBChange(e) {
+    const term = e.target.value;
+    setSearchTermB(term);
+
+    const results = optionsVilles.filter((ville) =>
+      ville.label.toLowerCase().includes(term.toLowerCase())
+    );
+
+    term !== "" ? setSearchResultsB(results) : setSearchResultsB([]);
   }
 
   function handleVilleAChange(event) {
@@ -73,14 +84,18 @@ export default function FormTrajet() {
       <form className="form-floating">
         {!isVillesLoading ? (
           <div id="villes">
-            <div id="villeA">
+            <div className="form-floating m-3">
               <input
+                id="villeA"
                 type="search"
                 autoComplete="off"
                 placeholder="Départ"
+                class="form-control"
                 onChange={handleSearchChange}
                 value={searchTerm}
+                style={{ width: "150%" }}
               />
+              <label for="villeA">Départ</label>
               <ul
                 style={{
                   listStyle: "none",
@@ -89,46 +104,59 @@ export default function FormTrajet() {
                   overflow: "hidden",
                 }}
               >
-                {searchResults.map((result, index) => (
-                  <li key={index}>{result.label}</li>
-                ))}
+                {searchResults.map(
+                  (result, index) =>
+                    index < 5 && (
+                      <li
+                        key={index}
+                        onClick={() => {
+                          setSearchTerm(result.label);
+                          setSearchResults([]);
+                        }}
+                        style={{ cursor: "pointer" }}
+                      >
+                        {result.label}
+                      </li>
+                    )
+                )}
               </ul>
             </div>
-            <div id="villeB">
-              <input type="search" autoComplete="off" placeholder="Arrivée" />
-            </div>
-          </div>
-        ) : (
-          <div className="spinner-border" role="status">
-            <span className="visually-hidden">Chargement...</span>
-          </div>
-        )}
-      </form>
-
-      <form className="form-floating m-3">
-        {!isVillesLoading ? (
-          <div id="villes">
-            <div className="m-3">
-              <Select
-                placeholder="Départ"
-                id="villeA"
-                noOptionsMessage={() => {
-                  return "Aucune ville disponible...";
-                }}
-                onChange={handleVilleAChange}
-                options={optionsVilles}
-              />
-            </div>
-            <div className="m-3">
-              <Select
-                placeholder="Arrivée"
+            <div className="form-floating m-3">
+              <input
                 id="villeB"
-                noOptionsMessage={() => {
-                  return "Aucune ville disponible...";
-                }}
-                onChange={handleVilleBChange}
-                options={optionsVilles}
+                type="search"
+                autoComplete="off"
+                placeholder="Arrivée"
+                class="form-control"
+                onChange={handleSearchBChange}
+                value={searchTermB}
+                style={{ width: "150%" }}
               />
+              <label for="villeB">Arrivée</label>
+              <ul
+                style={{
+                  listStyle: "none",
+                  width: "100%",
+                  borderRadius: "4px",
+                  overflow: "hidden",
+                }}
+              >
+                {searchResultsB.map(
+                  (result, index) =>
+                    index < 5 && (
+                      <li
+                        key={index}
+                        onClick={() => {
+                          setSearchTermB(result.label);
+                          setSearchResultsB([]);
+                        }}
+                        style={{ cursor: "pointer" }}
+                      >
+                        {result.label}
+                      </li>
+                    )
+                )}
+              </ul>
             </div>
           </div>
         ) : (
@@ -136,6 +164,7 @@ export default function FormTrajet() {
             <span className="visually-hidden">Chargement...</span>
           </div>
         )}
+
         <div className="m-3">
           <Select
             placeholder="Véhicule"
