@@ -3,14 +3,16 @@ from spyne.protocol.soap import Soap11
 from spyne.server.wsgi import WsgiApplication
 
 class TrajetService(ServiceBase):
-    @rpc(Float, Integer, Float, _returns=Float)
-    def calcul_trajet(ctx, distance, autonomie, tps_chargement):
+    @rpc(Float, Integer, Float, Float, _returns=Float)
+    def calcul_trajet(ctx, distance, autonomie, vitesse_moyenne, tps_chargement):
         """Calcul le temps de trajet en fonction de la 
             distance et de l’autonomie des véhicules et en tenant compte du temps de 
-            chargement"""
+            chargement et de la vitesse du véhicule"""
         if distance < autonomie:
-            return None # cf. API Google
-        return 0.0
+            return distance / vitesse_moyenne
+        else:
+            nb_chargements = distance // autonomie
+            return (nb_chargements * tps_chargement) + (distance / vitesse_moyenne)
 
 application = Application([TrajetService],
     tns='spyne.examples.trajet',
