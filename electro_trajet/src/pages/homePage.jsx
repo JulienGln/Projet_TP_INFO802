@@ -11,7 +11,7 @@ export default function Home() {
       >
         Electro'Trajet
       </h1>
-      <div className="d-flex justify-content-around">
+      <div className="d-flex flex-column flex-md-row justify-content-around">
         <FormTrajet />
         <Map />
       </div>

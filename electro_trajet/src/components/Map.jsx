@@ -38,6 +38,35 @@ export default function Map() {
     });
   }, []);
 
+  useEffect(() => {
+    if (mapRef.current) {
+      // deux marqueurs
+      const icon_marker = {
+        icon: L.icon({
+          iconUrl:
+            "https://cdn4.iconfinder.com/data/icons/small-n-flat/24/map-marker-512.png",
+          iconSize: [25, 41],
+        }),
+      };
+      const marker1 = L.marker([48.8566, 2.3522], icon_marker).addTo(
+        mapRef.current
+      );
+      const marker2 = L.marker([51.5074, -0.1278], icon_marker).addTo(
+        mapRef.current
+      );
+
+      // ligne de trajet entre les deux marqueurs
+      const latlngs = [marker1.getLatLng(), marker2.getLatLng()];
+      const polyline = L.polyline(latlngs, { color: "blue" }).addTo(
+        mapRef.current
+      );
+
+      // Ajuster la vue pour inclure les deux marqueurs
+      const bounds = L.latLngBounds(latlngs);
+      mapRef.current.fitBounds(bounds);
+    }
+  }, [mapRef.current]);
+
   return (
     <div
       id="map-container"
