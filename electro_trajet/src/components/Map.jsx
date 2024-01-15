@@ -13,7 +13,7 @@ export default function Map({ villes }) {
   useEffect(() => {
     if (!mapRef.current) {
       mapRef.current = L.map("map", { zoom: 5 }).setView(
-        [46.227638, 2.213749],
+        [45.583223, 5.909299],
         5
       );
 
@@ -48,12 +48,16 @@ export default function Map({ villes }) {
           iconSize: [25, 41],
         }),
       };
-      const marker1 = L.marker([48.8566, 2.3522], icon_marker).addTo(
-        mapRef.current
-      );
-      const marker2 = L.marker([51.5074, -0.1278], icon_marker).addTo(
-        mapRef.current
-      );
+      const coordsVilleA = villes.villeA;
+      const marker1 = L.marker(
+        [coordsVilleA.lat, coordsVilleA.lon],
+        icon_marker
+      ).addTo(mapRef.current);
+      const coordsVilleB = villes.villeB;
+      const marker2 = L.marker(
+        [coordsVilleB.lat, coordsVilleB.lon],
+        icon_marker
+      ).addTo(mapRef.current);
 
       // ligne de trajet entre les deux marqueurs
       const latlngs = [marker1.getLatLng(), marker2.getLatLng()];
@@ -78,6 +82,7 @@ export default function Map({ villes }) {
         overflow: "hidden",
       }}
     >
+      <p>{JSON.stringify(villes)}</p>
       <div
         id="map"
         style={{
