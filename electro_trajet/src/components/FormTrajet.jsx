@@ -11,6 +11,7 @@ export default function FormTrajet({ giveCoordsToMap }) {
   const [coordsVilleB, setCoordsVilleB] = useState(null);
   const [optionsVilles, setOptionsVilles] = useState([]);
   const [isVillesLoading, setIsVillesLoading] = useState(true);
+  const [hasErrors, setHasErrors] = useState(false);
 
   const optionsVehicules = [
     { value: "tesla", label: "Tesla" },
@@ -105,7 +106,10 @@ export default function FormTrajet({ giveCoordsToMap }) {
     event.preventDefault(); // évite le rechargement de la page
     // transmission des coordonnées à la map une fois les deux villes renseignées
     if (coordsVilleA && coordsVilleB) {
+      setHasErrors(false);
       giveCoordsToMap({ villeA: coordsVilleA, villeB: coordsVilleB });
+    } else {
+      setHasErrors(true);
     }
   }
 
@@ -236,6 +240,11 @@ export default function FormTrajet({ giveCoordsToMap }) {
           Valider
         </button>
       </form>
+      {hasErrors && (
+        <div class="alert alert-danger mt-3" role="alert">
+          Les données des villes ne sont pas correctes
+        </div>
+      )}
       <p className="fw-bold">Temps de trajet : {tempsTrajet}</p>
     </div>
   );
