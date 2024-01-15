@@ -140,10 +140,12 @@ export default function FormTrajet({ giveCoordsToMap }) {
                 type="search"
                 autoComplete="off"
                 placeholder="Départ"
-                class="form-control"
+                class="form-control shadow-sm border border-bottom-0"
                 onChange={handleSearchChange}
                 value={searchTerm}
-                style={{ width: "150%" }}
+                style={{
+                  width: "150%",
+                }}
               />
               <label for="villeA">Départ</label>
               <ul
@@ -164,7 +166,12 @@ export default function FormTrajet({ giveCoordsToMap }) {
                           setSearchResults([]);
                           handleChangeCoordsVille("départ");
                         }}
-                        style={{ cursor: "pointer" }}
+                        style={{
+                          cursor: "pointer",
+                          padding: "10px",
+                          backgroundColor: index % 2 === 0 ? "#f6f6f6" : "#fff",
+                          borderBottom: "1px solid lightgray",
+                        }}
                       >
                         {result.label}
                       </li>
@@ -179,7 +186,7 @@ export default function FormTrajet({ giveCoordsToMap }) {
                 type="search"
                 autoComplete="off"
                 placeholder="Arrivée"
-                class="form-control"
+                class="form-control shadow-sm border border-bottom-0"
                 onChange={handleSearchBChange}
                 value={searchTermB}
                 style={{ width: "150%" }}
@@ -203,7 +210,12 @@ export default function FormTrajet({ giveCoordsToMap }) {
                           setSearchResultsB([]);
                           handleChangeCoordsVille("arrivée");
                         }}
-                        style={{ cursor: "pointer" }}
+                        style={{
+                          cursor: "pointer",
+                          padding: "10px",
+                          backgroundColor: index % 2 === 0 ? "#f6f6f6" : "#fff",
+                          borderBottom: "1px solid lightgray",
+                        }}
                       >
                         {result.label}
                       </li>
@@ -229,6 +241,7 @@ export default function FormTrajet({ giveCoordsToMap }) {
               return "Aucune véhicule disponible...";
             }}
             options={optionsVehicules}
+            className="shadow-sm"
           />
         </div>
         <button

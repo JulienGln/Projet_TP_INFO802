@@ -12,8 +12,13 @@ export default function Home() {
   return (
     <div>
       <h1
-        style={{ backgroundColor: "blueviolet", color: "white" }}
+        style={{
+          backgroundColor: "blueviolet",
+          color: "white",
+          cursor: "pointer",
+        }}
         className="p-5 fw-light fs-1"
+        onClick={() => window.location.replace(".")}
       >
         Electro'Trajet
       </h1>
