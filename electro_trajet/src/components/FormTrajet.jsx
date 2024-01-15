@@ -98,6 +98,10 @@ export default function FormTrajet({ giveCoordsToMap }) {
           console.error("Erreur lors de la requête API Adresse", error);
         });
     }
+  }
+
+  function handleSubmitForm(event) {
+    event.preventDefault(); // évite le rechargement de la page
     // transmission des coordonnées à la map une fois les deux villes renseignées
     if (coordsVilleA && coordsVilleB) {
       giveCoordsToMap({ villeA: coordsVilleA, villeB: coordsVilleB });
@@ -127,6 +131,7 @@ export default function FormTrajet({ giveCoordsToMap }) {
             <div className="form-floating m-3">
               <input
                 id="villeA"
+                required
                 type="search"
                 autoComplete="off"
                 placeholder="Départ"
@@ -165,6 +170,7 @@ export default function FormTrajet({ giveCoordsToMap }) {
             <div className="form-floating m-3">
               <input
                 id="villeB"
+                required
                 type="search"
                 autoComplete="off"
                 placeholder="Arrivée"
@@ -211,12 +217,21 @@ export default function FormTrajet({ giveCoordsToMap }) {
           <Select
             placeholder="Véhicule"
             id="vehicule"
+            required
             noOptionsMessage={() => {
               return "Aucune véhicule disponible...";
             }}
             options={optionsVehicules}
           />
         </div>
+        <button
+          className="btn btn-success"
+          type="submit"
+          disabled={!coordsVilleA && !coordsVilleB}
+          onClick={handleSubmitForm}
+        >
+          Valider
+        </button>
       </form>
       <p className="fw-bold">Temps de trajet : {tempsTrajet}</p>
     </div>
