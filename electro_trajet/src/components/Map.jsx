@@ -13,7 +13,11 @@ export default function Map({ villes }) {
   useEffect(() => {
     if (!mapRef.current) {
       mapRef.current = L.map("map", { zoom: 5 }).setView(
-        [45.583223, 5.909299],
+        //[45.583223, 5.909299],
+        [
+          (villes.villeA.lat + villes.villeB.lat) / 2,
+          (villes.villeA.lon + villes.villeB.lon) / 2,
+        ],
         5
       );
 
