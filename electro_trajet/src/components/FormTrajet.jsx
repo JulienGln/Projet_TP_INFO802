@@ -208,9 +208,11 @@ export default function FormTrajet({ giveCoordsToMap }) {
             </div>
           </div>
         ) : (
-          <div className="spinner-border" role="status">
-            <span className="visually-hidden">Chargement...</span>
-          </div>
+          <>
+            <div className="spinner-border text-primary" role="status"></div>
+            <br />
+            <span className="fw-bold">Chargement des villes de France...</span>
+          </>
         )}
 
         <div className="m-3">
