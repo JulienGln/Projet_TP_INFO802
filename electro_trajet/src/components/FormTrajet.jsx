@@ -25,6 +25,7 @@ export default function FormTrajet({ giveCoordsToMap }) {
   function formatageVilles(villes) {
     var res = [];
     for (let i = 0; i < villes.length; i++) {
+      //villes[i].population >= 3000 && // si on veut limiter aux plus grandes villes
       res.push({ value: villes[i].nom, label: villes[i].nom });
     }
     setOptionsVilles(res);
