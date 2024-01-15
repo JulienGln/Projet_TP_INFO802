@@ -54,7 +54,7 @@ export default function FormTrajet({ giveCoordsToMap }) {
 
   function handleChangeCoordsVille(position) {
     if (position === "départ") {
-      const apiUrl = `https://api-adresse.data.gouv.fr/search/?q=${searchTerm}&limit=1`;
+      const apiUrl = `https://api-adresse.data.gouv.fr/search/?q=${searchTerm}&type=municipality&limit=1`;
       fetch(apiUrl)
         .then((response) => response.json())
         .then((data) => {
@@ -76,7 +76,7 @@ export default function FormTrajet({ giveCoordsToMap }) {
           console.error("Erreur lors de la requête API Adresse", error);
         });
     } else if (position === "arrivée") {
-      const apiUrl = `https://api-adresse.data.gouv.fr/search/?q=${searchTermB}&limit=1`;
+      const apiUrl = `https://api-adresse.data.gouv.fr/search/?q=${searchTermB}&type=municipality&limit=1`;
       fetch(apiUrl)
         .then((response) => response.json())
         .then((data) => {
