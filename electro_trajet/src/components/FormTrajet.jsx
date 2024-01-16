@@ -262,7 +262,7 @@ export default function FormTrajet({ giveCoordsToMap }) {
           />
         </div>
         <button
-          className="btn btn-success"
+          className="btn btn-success shadow-sm"
           type="submit"
           disabled={!coordsVilleA && !coordsVilleB}
           onClick={handleSubmitForm}
@@ -271,20 +271,20 @@ export default function FormTrajet({ giveCoordsToMap }) {
         </button>
       </form>
       {hasErrors && (
-        <div class="alert alert-danger mt-3" role="alert">
+        <div class="alert alert-danger mt-3 shadow-sm" role="alert">
           Les données des villes ne sont pas correctes
         </div>
       )}
       {infoTrouPaume && (
         <>
-          {/*<div class="alert alert-info mt-3 d-flex align-items-center" role="alert">
+          {/*<div class="alert alert-info mt-4 mx-5 d-flex align-items-center shadow-sm" role="alert">
             Attention : Les coordonnées que vous avez entrées correspondent à un
             lieu isolé ou peu connu. Il se peut que les résultats de la
             recherche soient imprécis ou erronés. Veuillez vérifier la validité
             des données avant de les utiliser. Merci de votre compréhension.
       </div>*/}
           <div
-            class="alert alert-info mt-3 d-flex align-items-center"
+            class="alert alert-info mt-4 mx-5 d-flex align-items-center shadow-sm"
             role="alert"
           >
             Attention : Vous avez tapé les coordonnées d’un bled paumé où même

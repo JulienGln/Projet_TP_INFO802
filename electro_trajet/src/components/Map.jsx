@@ -92,6 +92,7 @@ export default function Map({ villes }) {
         maxHeight: "500px",
         overflow: "hidden",
       }}
+      className="shadow-sm rounded"
     >
       <p>{JSON.stringify(villes)}</p>
       <div
