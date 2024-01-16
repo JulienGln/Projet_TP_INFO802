@@ -12,6 +12,8 @@ export default function FormTrajet({ giveCoordsToMap }) {
   const [optionsVilles, setOptionsVilles] = useState([]);
   const [isVillesLoading, setIsVillesLoading] = useState(true);
   const [hasErrors, setHasErrors] = useState(false);
+  const [infoTrouPaume, setInfoTrouPaume] = useState(false);
+  const [disableInputs, setDisableInputs] = useState(false); // lorsque la map est affichée, les inputs sont désactivées
 
   const optionsVehicules = [
     { value: "tesla", label: "Tesla" },
@@ -68,6 +70,12 @@ export default function FormTrajet({ giveCoordsToMap }) {
             const latitude = coords[1];
             const longitude = coords[0];
 
+            if (firstResult.properties.population < 1000) {
+              setInfoTrouPaume(true);
+            } else {
+              setInfoTrouPaume(false);
+            }
+
             // console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
             setCoordsVilleA({ lat: latitude, lon: longitude });
           } else {
@@ -90,6 +98,12 @@ export default function FormTrajet({ giveCoordsToMap }) {
             const latitude = coords[1];
             const longitude = coords[0];
 
+            if (firstResult.properties.population < 1000) {
+              setInfoTrouPaume(true);
+            } else {
+              setInfoTrouPaume(false);
+            }
+
             // console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
             setCoordsVilleB({ lat: latitude, lon: longitude });
           } else {
@@ -107,6 +121,7 @@ export default function FormTrajet({ giveCoordsToMap }) {
     // transmission des coordonnées à la map une fois les deux villes renseignées
     if (coordsVilleA && coordsVilleB) {
       setHasErrors(false);
+      setDisableInputs(true);
       giveCoordsToMap({ villeA: coordsVilleA, villeB: coordsVilleB });
     } else {
       setHasErrors(true);
@@ -143,6 +158,7 @@ export default function FormTrajet({ giveCoordsToMap }) {
                 class="form-control shadow-sm border border-bottom-0"
                 onChange={handleSearchChange}
                 value={searchTerm}
+                disabled={disableInputs}
                 style={{
                   width: "150%",
                 }}
@@ -189,6 +205,7 @@ export default function FormTrajet({ giveCoordsToMap }) {
                 class="form-control shadow-sm border border-bottom-0"
                 onChange={handleSearchBChange}
                 value={searchTermB}
+                disabled={disableInputs}
                 style={{ width: "150%" }}
               />
               <label for="villeB">Arrivée</label>
@@ -257,6 +274,25 @@ export default function FormTrajet({ giveCoordsToMap }) {
         <div class="alert alert-danger mt-3" role="alert">
           Les données des villes ne sont pas correctes
         </div>
+      )}
+      {infoTrouPaume && (
+        <>
+          {/*<div class="alert alert-info mt-3 d-flex align-items-center" role="alert">
+            Attention : Les coordonnées que vous avez entrées correspondent à un
+            lieu isolé ou peu connu. Il se peut que les résultats de la
+            recherche soient imprécis ou erronés. Veuillez vérifier la validité
+            des données avant de les utiliser. Merci de votre compréhension.
+      </div>*/}
+          <div
+            class="alert alert-info mt-3 d-flex align-items-center"
+            role="alert"
+          >
+            Attention : Vous avez tapé les coordonnées d’un bled paumé où même
+            les mouches ne vont pas. Il y a de fortes chances que les résultats
+            soient bidons ou à côté de la plaque. Ne faites pas confiance aux
+            données sans les vérifier. C’est pas de ma faute, c’est la vôtre.
+          </div>
+        </>
       )}
       <p className="fw-bold">Temps de trajet : {tempsTrajet}</p>
     </div>
