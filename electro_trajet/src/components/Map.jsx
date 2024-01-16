@@ -44,36 +44,43 @@ export default function Map({ villes }) {
 
   useEffect(() => {
     if (mapRef.current) {
-      // deux marqueurs
-      const icon_marker = {
-        icon: L.icon({
-          iconUrl:
-            "https://cdn4.iconfinder.com/data/icons/small-n-flat/24/map-marker-512.png",
-          iconSize: [25, 41],
-        }),
-      };
-      const coordsVilleA = villes.villeA;
-      const marker1 = L.marker(
-        [coordsVilleA.lat, coordsVilleA.lon],
-        icon_marker
-      ).addTo(mapRef.current);
-      const coordsVilleB = villes.villeB;
-      const marker2 = L.marker(
-        [coordsVilleB.lat, coordsVilleB.lon],
-        icon_marker
-      ).addTo(mapRef.current);
-
-      // ligne de trajet entre les deux marqueurs
-      const latlngs = [marker1.getLatLng(), marker2.getLatLng()];
-      const polyline = L.polyline(latlngs, { color: "blue" }).addTo(
-        mapRef.current
-      );
-
-      // Ajuster la vue pour inclure les deux marqueurs
-      const bounds = L.latLngBounds(latlngs);
-      mapRef.current.fitBounds(bounds);
+      addVilleAAndVilleB(mapRef);
     }
   }, [mapRef.current]);
+
+  /**
+   * Ajoute à la carte les marqueurs de départ et d'arrivée
+   * @param mapRef la carte
+   */
+  function addVilleAAndVilleB(mapRef) {
+    // deux marqueurs
+    const icon_marker = {
+      icon: L.icon({
+        iconUrl:
+          "https://cdn4.iconfinder.com/data/icons/small-n-flat/24/map-marker-512.png",
+        iconSize: [25, 41],
+      }),
+    };
+    const coordsVilleA = villes.villeA;
+    const marker1 = L.marker(
+      [coordsVilleA.lat, coordsVilleA.lon],
+      icon_marker
+    ).addTo(mapRef.current);
+    const coordsVilleB = villes.villeB;
+    const marker2 = L.marker(
+      [coordsVilleB.lat, coordsVilleB.lon],
+      icon_marker
+    ).addTo(mapRef.current);
+
+    // ligne de trajet entre les deux marqueurs
+    const latlngs = [marker1.getLatLng(), marker2.getLatLng()];
+    const polyline = L.polyline(latlngs, { color: "blue" }).addTo(
+      mapRef.current
+    );
+    // Ajuster la vue pour inclure les deux marqueurs
+    const bounds = L.latLngBounds(latlngs);
+    mapRef.current.fitBounds(bounds);
+  }
 
   return (
     <div
