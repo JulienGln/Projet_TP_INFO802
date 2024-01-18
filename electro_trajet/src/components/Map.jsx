@@ -140,6 +140,7 @@ export default function Map({ villes }) {
       routeWhileDragging: true,
       addWaypoints: false,
       show: false,
+      draggableWaypoints: false,
     });
 
     trajet.addTo(mapRef.current);

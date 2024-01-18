@@ -170,12 +170,13 @@ export default function FormTrajet({ giveCoordsToMap }) {
                   listStyle: "none",
                   width: "100%",
                   borderRadius: "4px",
-                  overflow: "hidden",
+                  overflow: "auto",
+                  maxHeight: "200px",
                 }}
               >
                 {searchResults.map(
                   (result, index) =>
-                    index < 5 && (
+                    index < 10 && (
                       <li
                         key={index}
                         onClick={() => {
@@ -215,12 +216,13 @@ export default function FormTrajet({ giveCoordsToMap }) {
                   listStyle: "none",
                   width: "100%",
                   borderRadius: "4px",
-                  overflow: "hidden",
+                  overflow: "auto",
+                  maxHeight: "200px",
                 }}
               >
                 {searchResultsB.map(
                   (result, index) =>
-                    index < 5 && (
+                    index < 10 && (
                       <li
                         key={index}
                         onClick={() => {
