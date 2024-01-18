@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 // import Openrouteservice from "openrouteservice-js";
 import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import "leaflet-routing-machine";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 
 export default function Map({ villes }) {
