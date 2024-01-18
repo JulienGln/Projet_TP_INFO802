@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 // import Openrouteservice from "openrouteservice-js";
 import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -9,7 +9,25 @@ export default function Map({ villes }) {
   // });
 
   const mapRef = useRef(null); // éviter de s'afficher plusieurs fois
+  const [bornesIRVE, setBornesIRVE] = useState([]);
 
+  const icon_marker = {
+    icon: L.icon({
+      iconUrl:
+        "https://cdn4.iconfinder.com/data/icons/small-n-flat/24/map-marker-512.png",
+      iconSize: [25, 41],
+    }),
+  };
+  const icon_marker_borne = {
+    icon: L.icon({
+      iconUrl: "../../img/electro_trajet_ico_1.png",
+      iconSize: [25, 41],
+    }),
+  };
+
+  /**
+   * Initialisation de la map
+   */
   useEffect(() => {
     if (!mapRef.current) {
       mapRef.current = L.map("map", { zoom: 5 }).setView(
@@ -42,11 +60,22 @@ export default function Map({ villes }) {
     });
   }, []);
 
+  /**
+   * Ajout des villes sur la carte
+   */
   useEffect(() => {
     if (mapRef.current) {
       addVilleAAndVilleB(mapRef);
+      fetchTrajet();
     }
   }, [mapRef.current]);
+
+  /**
+   * Récupérer les bornes électriques
+   */
+  useEffect(() => {
+    fetchBornesIRVE();
+  }, []);
 
   /**
    * Ajoute à la carte les marqueurs de départ et d'arrivée
@@ -54,13 +83,6 @@ export default function Map({ villes }) {
    */
   function addVilleAAndVilleB(mapRef) {
     // deux marqueurs
-    const icon_marker = {
-      icon: L.icon({
-        iconUrl:
-          "https://cdn4.iconfinder.com/data/icons/small-n-flat/24/map-marker-512.png",
-        iconSize: [25, 41],
-      }),
-    };
     const coordsVilleA = villes.villeA;
     const marker1 = L.marker(
       [coordsVilleA.lat, coordsVilleA.lon],
@@ -74,12 +96,56 @@ export default function Map({ villes }) {
 
     // ligne de trajet entre les deux marqueurs
     const latlngs = [marker1.getLatLng(), marker2.getLatLng()];
-    const polyline = L.polyline(latlngs, { color: "blue" }).addTo(
-      mapRef.current
-    );
     // Ajuster la vue pour inclure les deux marqueurs
     const bounds = L.latLngBounds(latlngs);
     mapRef.current.fitBounds(bounds);
+  }
+
+  /**
+   * Récupère des bornes électriques sur le trajet
+   */
+  function fetchBornesIRVE() {
+    fetch(
+      "https://odre.opendatasoft.com/api/explore/v2.1/catalog/datasets/bornes-irve/records?limit=100"
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setBornesIRVE(data.results);
+        for (let i = 0; i < data.results.length; i++) {
+          let borne = data.results[i];
+          L.marker(
+            [borne.geo_point_borne.lat, borne.geo_point_borne.lon],
+            icon_marker_borne
+          ).addTo(mapRef.current);
+        }
+      })
+      .catch((error) => {
+        console.error("Erreur lors de la récupération des données :", error);
+      });
+  }
+
+  function fetchTrajet() {
+    // Utilisez l'API Directions de OpenRouteService
+    const apiKey = "5b3ce3597851110001cf62482c9e7f7bfca24259965f3fbafb3fba43";
+    const apiUrl = `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${apiKey}&start=${villes.villeA.lon},${villes.villeA.lat}&end=${villes.villeB.lon},${villes.villeB.lat}`;
+
+    fetch(apiUrl, { method: "GET" })
+      .then((response) => response.json())
+      .then((data) => {
+        const routePoints = data.features[0].geometry.coordinates.map((coord) =>
+          L.latLng(coord[1], coord[0])
+        );
+
+        // Maintenant, routePoints contient la liste de points intermédiaires
+        // Vous pouvez utiliser ces points pour afficher le trajet sur votre carte Leaflet
+        const route = L.polyline(routePoints, { color: "blue" }).addTo(
+          mapRef.current
+        );
+        mapRef.current.fitBounds(route.getBounds());
+      })
+      .catch((error) =>
+        console.error("Erreur lors de la récupération des directions:", error)
+      );
   }
 
   return (
