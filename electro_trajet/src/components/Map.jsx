@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 // import Openrouteservice from "openrouteservice-js";
 import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 
 export default function Map({ villes }) {
   // const orsDirections = new Openrouteservice.Directions({
@@ -129,7 +130,18 @@ export default function Map({ villes }) {
     const apiKey = "5b3ce3597851110001cf62482c9e7f7bfca24259965f3fbafb3fba43";
     const apiUrl = `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${apiKey}&start=${villes.villeA.lon},${villes.villeA.lat}&end=${villes.villeB.lon},${villes.villeB.lat}`;
 
-    fetch(apiUrl, { method: "GET" })
+    // Ajouter le contrôle Leaflet Routing Machine
+    L.routing
+      .control({
+        waypoints: [
+          L.latLng(villes.villeA.lat, villes.villeA.lon),
+          L.latLng(villes.villeB.lat, villes.villeB.lon),
+        ],
+        routeWhileDragging: true,
+      })
+      .addTo(mapRef.current);
+
+    /*fetch(apiUrl, { method: "GET" })
       .then((response) => response.json())
       .then((data) => {
         const routePoints = data.features[0].geometry.coordinates.map((coord) =>
@@ -145,7 +157,7 @@ export default function Map({ villes }) {
       })
       .catch((error) =>
         console.error("Erreur lors de la récupération des directions:", error)
-      );
+      );*/
   }
 
   return (
