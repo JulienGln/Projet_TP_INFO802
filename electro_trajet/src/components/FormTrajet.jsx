@@ -174,27 +174,32 @@ export default function FormTrajet({ giveCoordsToMap }) {
                   maxHeight: "200px",
                 }}
               >
-                {searchResults.map(
-                  (result, index) =>
-                    index < 10 && (
-                      <li
-                        key={index}
-                        onClick={() => {
-                          setSearchTerm(result.label);
-                          setSearchResults([]);
-                          handleChangeCoordsVille("départ");
-                        }}
-                        style={{
-                          cursor: "pointer",
-                          padding: "10px",
-                          backgroundColor: index % 2 === 0 ? "#f6f6f6" : "#fff",
-                          borderBottom: "1px solid lightgray",
-                        }}
-                      >
-                        {result.label}
-                      </li>
-                    )
-                )}
+                {searchResults
+                  .sort((a, b) => {
+                    return a.label.length - b.label.length;
+                  })
+                  .map(
+                    (result, index) =>
+                      index < 10 && (
+                        <li
+                          key={index}
+                          onClick={() => {
+                            setSearchTerm(result.label);
+                            setSearchResults([]);
+                            handleChangeCoordsVille("départ");
+                          }}
+                          style={{
+                            cursor: "pointer",
+                            padding: "10px",
+                            backgroundColor:
+                              index % 2 === 0 ? "#f6f6f6" : "#fff",
+                            borderBottom: "1px solid lightgray",
+                          }}
+                        >
+                          {result.label}
+                        </li>
+                      )
+                  )}
               </ul>
             </div>
             <div className="form-floating m-3">
@@ -220,27 +225,32 @@ export default function FormTrajet({ giveCoordsToMap }) {
                   maxHeight: "200px",
                 }}
               >
-                {searchResultsB.map(
-                  (result, index) =>
-                    index < 10 && (
-                      <li
-                        key={index}
-                        onClick={() => {
-                          setSearchTermB(result.label);
-                          setSearchResultsB([]);
-                          handleChangeCoordsVille("arrivée");
-                        }}
-                        style={{
-                          cursor: "pointer",
-                          padding: "10px",
-                          backgroundColor: index % 2 === 0 ? "#f6f6f6" : "#fff",
-                          borderBottom: "1px solid lightgray",
-                        }}
-                      >
-                        {result.label}
-                      </li>
-                    )
-                )}
+                {searchResultsB
+                  .sort((a, b) => {
+                    return a.label.length - b.label.length;
+                  })
+                  .map(
+                    (result, index) =>
+                      index < 10 && (
+                        <li
+                          key={index}
+                          onClick={() => {
+                            setSearchTermB(result.label);
+                            setSearchResultsB([]);
+                            handleChangeCoordsVille("arrivée");
+                          }}
+                          style={{
+                            cursor: "pointer",
+                            padding: "10px",
+                            backgroundColor:
+                              index % 2 === 0 ? "#f6f6f6" : "#fff",
+                            borderBottom: "1px solid lightgray",
+                          }}
+                        >
+                          {result.label}
+                        </li>
+                      )
+                  )}
               </ul>
             </div>
           </div>
