@@ -126,20 +126,22 @@ export default function Map({ villes }) {
   }
 
   function fetchTrajet() {
-    // Utilisez l'API Directions de OpenRouteService
-    const apiKey = "5b3ce3597851110001cf62482c9e7f7bfca24259965f3fbafb3fba43";
-    const apiUrl = `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${apiKey}&start=${villes.villeA.lon},${villes.villeA.lat}&end=${villes.villeB.lon},${villes.villeB.lat}`;
+    // Utiliser l'API Directions de OpenRouteService
+    //const apiKey = "5b3ce3597851110001cf62482c9e7f7bfca24259965f3fbafb3fba43";
+    //const apiUrl = `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${apiKey}&start=${villes.villeA.lon},${villes.villeA.lat}&end=${villes.villeB.lon},${villes.villeB.lat}`;
 
     // Ajouter le contrôle Leaflet Routing Machine
-    L.routing
-      .control({
-        waypoints: [
-          L.latLng(villes.villeA.lat, villes.villeA.lon),
-          L.latLng(villes.villeB.lat, villes.villeB.lon),
-        ],
-        routeWhileDragging: true,
-      })
-      .addTo(mapRef.current);
+    var trajet = L.routing.control({
+      waypoints: [
+        L.latLng(villes.villeA.lat, villes.villeA.lon),
+        L.latLng(villes.villeB.lat, villes.villeB.lon),
+      ],
+      routeWhileDragging: true,
+      addWaypoints: false,
+      show: false,
+    });
+
+    trajet.addTo(mapRef.current);
 
     /*fetch(apiUrl, { method: "GET" })
       .then((response) => response.json())
