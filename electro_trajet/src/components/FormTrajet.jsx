@@ -121,6 +121,7 @@ export default function FormTrajet({ giveCoordsToMap }) {
     // transmission des coordonnées à la map une fois les deux villes renseignées
     if (coordsVilleA && coordsVilleB) {
       setHasErrors(false);
+      setInfoTrouPaume(false);
       setDisableInputs(true);
       giveCoordsToMap({ villeA: coordsVilleA, villeB: coordsVilleB });
     } else {
@@ -271,7 +272,10 @@ export default function FormTrajet({ giveCoordsToMap }) {
         </button>
       </form>
       {hasErrors && (
-        <div class="alert alert-danger mt-3 shadow-sm" role="alert">
+        <div
+          class="alert alert-danger mt-4 mx-5 align-items-center shadow-sm"
+          role="alert"
+        >
           Les données des villes ne sont pas correctes
         </div>
       )}

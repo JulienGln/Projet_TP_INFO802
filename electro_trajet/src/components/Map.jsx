@@ -94,7 +94,7 @@ export default function Map({ villes }) {
       }}
       className="shadow-sm rounded"
     >
-      <p>{JSON.stringify(villes)}</p>
+      <p className="visually-hidden">{JSON.stringify(villes)}</p>
       <div
         id="map"
         style={{
