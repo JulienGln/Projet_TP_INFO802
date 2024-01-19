@@ -11,6 +11,8 @@ export default function FormTrajet({ giveCoordsToMap }) {
   const [coordsVilleB, setCoordsVilleB] = useState(null);
   const [optionsVilles, setOptionsVilles] = useState([]);
   const [optionsVehicules, setOptionsVehicules] = useState([]);
+  const [vehicules, setVehicules] = useState([]);
+  const [vehicule, setVehicule] = useState(null);
   const [isVillesLoading, setIsVillesLoading] = useState(true);
   const [isVehiclesLoading, setIsVehiclesLoading] = useState(true);
   const [hasErrors, setHasErrors] = useState(false);
@@ -28,6 +30,23 @@ export default function FormTrajet({ giveCoordsToMap }) {
       res.push({ value: villes[i].nom, label: villes[i].nom });
     }
     setOptionsVilles(res);
+  }
+
+  /**
+   * Formate les données JSON de l'API pour le composant React Select
+   * @param {JSON} vehicules les véhicules renvoyées par l'API
+   */
+  function formatageVehicules(vehicules) {
+    var res = [];
+    for (let i = 0; i < vehicules.length; i++) {
+      //vehicules[i].population >= 3000 && // si on veut limiter aux plus grandes vehicules
+      res.push({
+        value: vehicules[i].id,
+        label: vehicules[i].naming.make + " " + vehicules[i].naming.model,
+        //+` [${vehicules[i].naming.chargetrip_version}]`,
+      });
+    }
+    setOptionsVehicules(res);
   }
 
   function handleSearchChange(e) {
@@ -50,6 +69,10 @@ export default function FormTrajet({ giveCoordsToMap }) {
     );
 
     term !== "" ? setSearchResultsB(results) : setSearchResultsB([]);
+  }
+
+  function handleVehiculeChange(event) {
+    setVehicule(event.value);
   }
 
   function handleChangeCoordsVille(position) {
@@ -173,7 +196,10 @@ export default function FormTrajet({ giveCoordsToMap }) {
       }),
     })
       .then((res) => res.json())
-      .then((data) => setOptionsVehicules(data.data.vehicleList));
+      .then((data) => {
+        setVehicules(data.data.vehicleList),
+          formatageVehicules(data.data.vehicleList);
+      });
     /*const fetchData = async () => {
       try {
         const headers = {
@@ -320,7 +346,6 @@ export default function FormTrajet({ giveCoordsToMap }) {
                   )}
               </ul>
             </div>
-            <p>{JSON.stringify(optionsVehicules)}</p>
           </div>
         ) : (
           <>
@@ -339,6 +364,7 @@ export default function FormTrajet({ giveCoordsToMap }) {
               return "Aucune véhicule disponible...";
             }}
             options={optionsVehicules}
+            onChange={handleVehiculeChange}
             className="shadow-sm"
           />
         </div>
