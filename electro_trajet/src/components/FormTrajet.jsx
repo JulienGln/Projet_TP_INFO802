@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Select from "react-select";
-import { ApolloClient, InMemoryCache, gql, HttpLink } from "@apollo/client";
-import { graphql } from "graphql";
 
 export default function FormTrajet({ giveCoordsToMap }) {
   const [tempsTrajet, setTempsTrajet] = useState(0);
@@ -18,33 +16,6 @@ export default function FormTrajet({ giveCoordsToMap }) {
   const [hasErrors, setHasErrors] = useState(false);
   const [infoTrouPaume, setInfoTrouPaume] = useState(false);
   const [disableInputs, setDisableInputs] = useState(false); // lorsque la map est affichée, les inputs sont désactivées
-
-  /*const optionsVehicules = [
-    { value: "tesla", label: "Tesla" },
-    { value: "renault", label: "Renault Zoé" },
-    { value: "peugeot", label: "Peugeot e-208" },
-  ]; */ // à chercher dynamiquement
-
-  const GET_ELECTRIC_VEHICLES = gql`
-    query GetElectricVehicles {
-      electricVehicles {
-        id
-        make
-        model
-        year
-      }
-    }
-  `;
-
-  const clientQL = new ApolloClient({
-    /*link: new HttpLink({
-      uri: "https://api.chargetrip.io/graphql",
-      //headers: headers,
-    }),*/
-    uri: "https://api.chargetrip.io/graphql",
-    //headers: headers,
-    cache: new InMemoryCache(),
-  });
 
   /**
    * Formate les données JSON de l'API pour le composant React Select
@@ -186,6 +157,7 @@ export default function FormTrajet({ giveCoordsToMap }) {
             page: 0, 
             size: 20
           ) {
+            id
             naming {
               make
               model
