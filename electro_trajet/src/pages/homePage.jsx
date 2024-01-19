@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Map from "../components/Map";
 import FormTrajet from "../components/FormTrajet";
+//import * as SOAP from "soap";
 
 export default function Home() {
   const [selectedCoordinates, setSelectedCoordinates] = useState(null);
