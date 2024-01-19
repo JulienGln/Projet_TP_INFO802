@@ -4,9 +4,15 @@ import FormTrajet from "../components/FormTrajet";
 
 export default function Home() {
   const [selectedCoordinates, setSelectedCoordinates] = useState(null);
+  const [infosTrajet, setInfosTrajet] = useState(null);
 
   function getCoordsFromForm(data) {
     setSelectedCoordinates(data);
+  }
+
+  function getInfosTrajet(data) {
+    setInfosTrajet(data);
+    // appel à SOAP ...
   }
 
   return (
@@ -24,7 +30,9 @@ export default function Home() {
       </h1>
       <div className="d-flex flex-column flex-md-row justify-content-around">
         <FormTrajet giveCoordsToMap={getCoordsFromForm} />
-        {selectedCoordinates && <Map villes={selectedCoordinates} />}
+        {selectedCoordinates && (
+          <Map villes={selectedCoordinates} giveInfosTrajet={getInfosTrajet} />
+        )}
       </div>
     </div>
   );

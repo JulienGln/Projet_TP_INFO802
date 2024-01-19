@@ -5,7 +5,7 @@ import "leaflet/dist/leaflet.css";
 import "leaflet-routing-machine";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 
-export default function Map({ villes }) {
+export default function Map({ villes, giveInfosTrajet }) {
   // const orsDirections = new Openrouteservice.Directions({
   //   api_key: "Votre clé API",
   // });
@@ -22,7 +22,7 @@ export default function Map({ villes }) {
   };
   const icon_marker_borne = {
     icon: L.icon({
-      iconUrl: "../../img/electro_trajet_ico_1.png",
+      iconUrl: "./../../img/electro_trajet_ico_1.png",
       iconSize: [25, 41],
     }),
   };
@@ -141,6 +141,23 @@ export default function Map({ villes }) {
       addWaypoints: false,
       show: false,
       draggableWaypoints: false,
+    });
+
+    trajet.on("routesfound", function (e) {
+      var route = e.routes[0];
+      var tempsDeTrajet = route.summary.totalTime; // Temps de trajet en secondes
+      var distanceKm = route.summary.totalDistance / 1000; // distance du trajet en km
+
+      var heures = Math.floor(tempsDeTrajet / 3600);
+      var minutes = Math.floor((tempsDeTrajet % 3600) / 60);
+
+      var vitesse_moyenne = distanceKm / (heures + minutes / 60);
+
+      giveInfosTrajet({
+        temps: tempsDeTrajet,
+        distance: distanceKm,
+        vitesseMoyenne: vitesse_moyenne.toPrecision(4),
+      });
     });
 
     trajet.addTo(mapRef.current);
