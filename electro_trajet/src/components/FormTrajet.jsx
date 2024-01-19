@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Select from "react-select";
+import { ApolloClient, InMemoryCache, gql, HttpLink } from "@apollo/client";
+import { graphql } from "graphql";
 
 export default function FormTrajet({ giveCoordsToMap }) {
   const [tempsTrajet, setTempsTrajet] = useState(0);
@@ -10,16 +12,39 @@ export default function FormTrajet({ giveCoordsToMap }) {
   const [coordsVilleA, setCoordsVilleA] = useState(null); // coordonnées ville A et B
   const [coordsVilleB, setCoordsVilleB] = useState(null);
   const [optionsVilles, setOptionsVilles] = useState([]);
+  const [optionsVehicules, setOptionsVehicules] = useState([]);
   const [isVillesLoading, setIsVillesLoading] = useState(true);
+  const [isVehiclesLoading, setIsVehiclesLoading] = useState(true);
   const [hasErrors, setHasErrors] = useState(false);
   const [infoTrouPaume, setInfoTrouPaume] = useState(false);
   const [disableInputs, setDisableInputs] = useState(false); // lorsque la map est affichée, les inputs sont désactivées
 
-  const optionsVehicules = [
+  /*const optionsVehicules = [
     { value: "tesla", label: "Tesla" },
     { value: "renault", label: "Renault Zoé" },
     { value: "peugeot", label: "Peugeot e-208" },
-  ]; // à chercher dynamiquement
+  ]; */ // à chercher dynamiquement
+
+  const GET_ELECTRIC_VEHICLES = gql`
+    query GetElectricVehicles {
+      electricVehicles {
+        id
+        make
+        model
+        year
+      }
+    }
+  `;
+
+  const clientQL = new ApolloClient({
+    /*link: new HttpLink({
+      uri: "https://api.chargetrip.io/graphql",
+      //headers: headers,
+    }),*/
+    uri: "https://api.chargetrip.io/graphql",
+    //headers: headers,
+    cache: new InMemoryCache(),
+  });
 
   /**
    * Formate les données JSON de l'API pour le composant React Select
@@ -144,6 +169,76 @@ export default function FormTrajet({ giveCoordsToMap }) {
       });
   }, []);
 
+  // récup des véhicules électriques
+  useEffect(() => {
+    const apiUrl = "https://api.chargetrip.io/graphql";
+    fetch(apiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "x-client-id": "5ed1175bad06853b3aa1e492",
+        "x-app-id": "623998b2c35130073829b2d2",
+      },
+      body: JSON.stringify({
+        query: `query vehicleList {
+          vehicleList(
+            page: 0, 
+            size: 20
+          ) {
+            naming {
+              make
+              model
+              chargetrip_version
+            }
+            media {
+              image {
+                thumbnail_url
+              }
+            }
+          }
+        }`,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => setOptionsVehicules(data.data.vehicleList));
+    /*const fetchData = async () => {
+      try {
+        const headers = {
+          //Replace this x-client-id and app-id with your own to get access to more vehicles
+          "x-client-id": "5ed1175bad06853b3aa1e492",
+          "x-app-id": "623998b2c35130073829b2d2",
+          //"x-client-id": "65aa81e90117350bae37ad07",
+          //"x-app-id": "65aa81e90117350bae37ad09",
+        };
+        const apiUrl = "https://api.chargetrip.io/graphql";
+
+        const response = await axios.get(apiUrl, {
+          headers: headers,
+        });
+
+        setoptionsVehicules(response.data);
+      } catch (err) {
+        console.log(err);
+        setIsVehiclesLoading(true);
+      } finally {
+        setIsVehiclesLoading(false);
+      }
+    };
+
+    fetchData();*/
+    /*clientQL
+      .query({ query: GET_ELECTRIC_VEHICLES })
+      .then((result) => {
+        setoptionsVehicules(result.data.electricVehicles);
+        setIsVehiclesLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setIsVehiclesLoading(true);
+      });*/
+  }, []);
+
   return (
     <div>
       <form className="form-floating">
@@ -253,6 +348,7 @@ export default function FormTrajet({ giveCoordsToMap }) {
                   )}
               </ul>
             </div>
+            <p>{JSON.stringify(optionsVehicules)}</p>
           </div>
         ) : (
           <>
