@@ -371,7 +371,7 @@ export default function FormTrajet({ giveCoordsToMap }) {
         <button
           className="btn btn-success shadow-sm"
           type="submit"
-          disabled={!coordsVilleA && !coordsVilleB}
+          disabled={!coordsVilleA || !coordsVilleB}
           onClick={handleSubmitForm}
         >
           Valider
