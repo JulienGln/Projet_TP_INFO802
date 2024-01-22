@@ -249,7 +249,7 @@ export default function FormTrajet({ giveCoordsToMap }) {
                 type="search"
                 autoComplete="off"
                 placeholder="Départ"
-                class="form-control shadow-sm border border-bottom-0"
+                className="form-control shadow-sm border border-bottom-0"
                 onChange={handleSearchChange}
                 value={searchTerm}
                 disabled={disableInputs}
@@ -257,7 +257,7 @@ export default function FormTrajet({ giveCoordsToMap }) {
                   width: "150%",
                 }}
               />
-              <label for="villeA">Départ</label>
+              <label htmlFor="villeA">Départ</label>
               <ul
                 style={{
                   listStyle: "none",
@@ -302,13 +302,13 @@ export default function FormTrajet({ giveCoordsToMap }) {
                 type="search"
                 autoComplete="off"
                 placeholder="Arrivée"
-                class="form-control shadow-sm border border-bottom-0"
+                className="form-control shadow-sm border border-bottom-0"
                 onChange={handleSearchBChange}
                 value={searchTermB}
                 disabled={disableInputs}
                 style={{ width: "150%" }}
               />
-              <label for="villeB">Arrivée</label>
+              <label htmlFor="villeB">Arrivée</label>
               <ul
                 style={{
                   listStyle: "none",
@@ -379,7 +379,7 @@ export default function FormTrajet({ giveCoordsToMap }) {
       </form>
       {hasErrors && (
         <div
-          class="alert alert-danger mt-4 mx-5 align-items-center shadow-sm"
+          className="alert alert-danger mt-4 mx-5 align-items-center shadow-sm"
           role="alert"
         >
           Les données des villes ne sont pas correctes
@@ -387,14 +387,14 @@ export default function FormTrajet({ giveCoordsToMap }) {
       )}
       {infoTrouPaume && (
         <>
-          {/*<div class="alert alert-info mt-4 mx-5 d-flex align-items-center shadow-sm" role="alert">
+          {/*<div className="alert alert-info mt-4 mx-5 d-flex align-items-center shadow-sm" role="alert">
             Attention : Les coordonnées que vous avez entrées correspondent à un
             lieu isolé ou peu connu. Il se peut que les résultats de la
             recherche soient imprécis ou erronés. Veuillez vérifier la validité
             des données avant de les utiliser. Merci de votre compréhension.
       </div>*/}
           <div
-            class="alert alert-info mt-4 mx-5 d-flex align-items-center shadow-sm"
+            className="alert alert-info mt-4 mx-5 d-flex align-items-center shadow-sm"
             role="alert"
           >
             Attention : Vous avez tapé les coordonnées d’un bled paumé où même
