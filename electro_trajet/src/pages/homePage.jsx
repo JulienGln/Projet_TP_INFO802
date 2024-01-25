@@ -25,7 +25,7 @@ export default function Home() {
       distance: data.distance,
       autonomie: data.vehicule.range.chargetrip_range.worst,
       vitesse_moyenne: data.vitesseMoyenne,
-      tps_chargement: data.vehicule.battery.usable_kwh / puissance_borne,
+      tps_chargement: data.vehicule.battery.usable_kwh / puissance_borne, // en heures
     };
 
     /*SOAP.createClient(url, (err, client) => {
