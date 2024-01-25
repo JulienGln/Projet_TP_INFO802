@@ -364,7 +364,9 @@ export default function FormTrajet({ giveCoordsToMap }) {
           <>
             <div className="spinner-border text-primary" role="status"></div>
             <br />
-            <span className="fw-bold">Chargement des villes de France...</span>
+            <span className="fw-bold">
+              Chargement des communes de France...
+            </span>
           </>
         )}
 

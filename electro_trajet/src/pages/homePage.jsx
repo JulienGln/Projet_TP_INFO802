@@ -12,39 +12,34 @@ export default function Home() {
   }
 
   function getInfosTrajet(data) {
+    /* data : 
+    {"temps":14733.9,"distance":367.8192,"vitesseMoyenne":"90.08",
+    "vehicule":{"id":"600e964a5fc2ee68bcb1f183","naming":{"make":"Kia","model":"e-Niro","chargetrip_version":"64 kWh (2021 - 2022)"},"media":{"image":{"thumbnail_url":"https://cars.chargetrip.io/6012a20df9c50f63d328b28a-d9a03dddc473b43c8e54e9ff967185d26a95444c.png"}},"battery":{"usable_kwh":64},"range":{"chargetrip_range":{"best":392,"worst":337}}}} */
     setInfosTrajet(data);
-    // appel à SOAP ...
-    /*const url = "http://127.0.0.1:8000?wsdl";
 
-    const argsHello = { name: "Julien", times: 5 };
+    // appel à SOAP ...
+    const url = "http://127.0.0.1:8000?wsdl";
+
+    const puissance_borne = 11; // champ "puiss_max" de l'API Borne IRVE
     const args = {
-      distance: 5,
-      autonomie: 4,
-      vitesse_moyenne: 0,
-      tps_chargement: 0,
+      distance: data.distance,
+      autonomie: data.vehicule.range.chargetrip_range.worst,
+      vitesse_moyenne: data.vitesseMoyenne,
+      tps_chargement: data.vehicule.battery.usable_kwh / puissance_borne,
     };
 
-    SOAP.createClient(url, (err, client) => {
+    /*SOAP.createClient(url, (err, client) => {
       if (err) {
         console.error(err);
         return;
       }
-
-      // Appel à la méthode say_hello
-      client.say_hello(argsHello, (err, result) => {
-        if (err) {
-          console.error(err);
-        } else {
-          console.log("Result say_hello:", result);
-        }
-      });
 
       // Appel à la méthode addition
       client.calcul_trajet(args, (err, result) => {
         if (err) {
           console.error(err);
         } else {
-          console.log("Result addition:", result);
+          console.log("Resultat trajet:", result);
         }
       });
     });*/
