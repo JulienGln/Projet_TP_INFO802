@@ -22,7 +22,8 @@ export default function Map({ villes, giveInfosTrajet }) {
   };
   const icon_marker_borne = {
     icon: L.icon({
-      iconUrl: "./../../img/electro_trajet_ico_1.png",
+      //iconUrl: "./../../img/electro_trajet_ico_1.png",
+      iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
       iconSize: [25, 41],
     }),
   };
@@ -116,8 +117,8 @@ export default function Map({ villes, giveInfosTrajet }) {
         for (let i = 0; i < data.results.length; i++) {
           let borne = data.results[i];
           L.marker(
-            [borne.geo_point_borne.lat, borne.geo_point_borne.lon],
-            icon_marker_borne
+            [borne.geo_point_borne.lat, borne.geo_point_borne.lon]
+            //icon_marker_borne
           ).addTo(mapRef.current);
         }
       })
@@ -157,6 +158,7 @@ export default function Map({ villes, giveInfosTrajet }) {
         temps: tempsDeTrajet,
         distance: distanceKm,
         vitesseMoyenne: vitesse_moyenne.toPrecision(4),
+        vehicule: villes.vehicule,
       });
     });
 

@@ -142,7 +142,11 @@ export default function FormTrajet({ giveCoordsToMap }) {
       setHasErrors(false);
       setInfoTrouPaume(false);
       setDisableInputs(true);
-      giveCoordsToMap({ villeA: coordsVilleA, villeB: coordsVilleB });
+      giveCoordsToMap({
+        villeA: coordsVilleA,
+        villeB: coordsVilleB,
+        vehicule: vehicules.find((car) => car.id === vehicule),
+      });
     } else {
       setHasErrors(true);
     }
@@ -189,6 +193,15 @@ export default function FormTrajet({ giveCoordsToMap }) {
             media {
               image {
                 thumbnail_url
+              }
+            }
+            battery {
+              usable_kwh
+            }
+            range {
+              chargetrip_range {
+                best
+                worst
               }
             }
           }
@@ -239,7 +252,7 @@ export default function FormTrajet({ giveCoordsToMap }) {
 
   return (
     <div>
-      <form className="form-floating">
+      <form className="form-floating" onSubmit={handleSubmitForm}>
         {!isVillesLoading ? (
           <div id="villes">
             <div className="form-floating m-3">
@@ -371,8 +384,7 @@ export default function FormTrajet({ giveCoordsToMap }) {
         <button
           className="btn btn-success shadow-sm"
           type="submit"
-          disabled={!coordsVilleA || !coordsVilleB}
-          onClick={handleSubmitForm}
+          disabled={!coordsVilleA || !coordsVilleB || !vehicule}
         >
           Valider
         </button>

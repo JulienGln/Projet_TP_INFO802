@@ -14,6 +14,40 @@ export default function Home() {
   function getInfosTrajet(data) {
     setInfosTrajet(data);
     // appel à SOAP ...
+    /*const url = "http://127.0.0.1:8000?wsdl";
+
+    const argsHello = { name: "Julien", times: 5 };
+    const args = {
+      distance: 5,
+      autonomie: 4,
+      vitesse_moyenne: 0,
+      tps_chargement: 0,
+    };
+
+    SOAP.createClient(url, (err, client) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+
+      // Appel à la méthode say_hello
+      client.say_hello(argsHello, (err, result) => {
+        if (err) {
+          console.error(err);
+        } else {
+          console.log("Result say_hello:", result);
+        }
+      });
+
+      // Appel à la méthode addition
+      client.calcul_trajet(args, (err, result) => {
+        if (err) {
+          console.error(err);
+        } else {
+          console.log("Result addition:", result);
+        }
+      });
+    });*/
   }
 
   return (
