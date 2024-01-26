@@ -148,6 +148,9 @@ export default function Map({ villes, giveInfosTrajet }) {
       var route = e.routes[0];
       var tempsDeTrajet = route.summary.totalTime; // Temps de trajet en secondes
       var distanceKm = route.summary.totalDistance / 1000; // distance du trajet en km
+      var points = route.coordinates; // tous les points qui composent le trajet
+
+      console.log("Points du trajet : " + points.length);
 
       var heures = Math.floor(tempsDeTrajet / 3600);
       var minutes = Math.floor((tempsDeTrajet % 3600) / 60);
