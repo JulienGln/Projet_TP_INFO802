@@ -15,8 +15,7 @@ export default function Map({ villes, giveInfosTrajet }) {
 
   const icon_marker = {
     icon: L.icon({
-      iconUrl:
-        "https://cdn4.iconfinder.com/data/icons/small-n-flat/24/map-marker-512.png",
+      iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
       iconSize: [25, 41],
     }),
   };
@@ -117,8 +116,8 @@ export default function Map({ villes, giveInfosTrajet }) {
         for (let i = 0; i < data.results.length; i++) {
           let borne = data.results[i];
           L.marker(
-            [borne.geo_point_borne.lat, borne.geo_point_borne.lon]
-            //icon_marker_borne
+            [borne.geo_point_borne.lat, borne.geo_point_borne.lon],
+            icon_marker_borne
           ).addTo(mapRef.current);
         }
       })
