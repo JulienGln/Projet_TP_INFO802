@@ -22,7 +22,7 @@ export default function Map({ villes, giveInfosTrajet }) {
   const icon_marker_borne = {
     icon: L.icon({
       //iconUrl: "./../../img/electro_trajet_ico_1.png",
-      iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+      iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
       iconSize: [25, 41],
     }),
   };
@@ -126,6 +126,28 @@ export default function Map({ villes, giveInfosTrajet }) {
       });
   }
 
+  /**
+   * Récupère les bornes prêt d'un point (lat, lon), dans un rayon en km donné (radius)
+   */
+  async function fetchBornesNearPoint(lat, lon, radius) {
+    const apiUrl = `https://odre.opendatasoft.com/explore/dataset/bornes-irve/api/?disjunctive.region&disjunctive.departement&geofilter.distance=${lat},${lon},${radius}`;
+
+    try {
+      const response = await fetch(apiUrl, { mode: "no-cors" });
+      if (!response.ok) {
+        throw new Error(`Erreur de l'API: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error(
+        "Erreur lors de la récupération des bornes électriques :",
+        error
+      );
+      throw error;
+    }
+  }
+
   function fetchTrajet() {
     // Utiliser l'API Directions de OpenRouteService
     //const apiKey = "5b3ce3597851110001cf62482c9e7f7bfca24259965f3fbafb3fba43";
@@ -143,13 +165,29 @@ export default function Map({ villes, giveInfosTrajet }) {
       draggableWaypoints: false,
     });
 
-    trajet.on("routesfound", function (e) {
+    trajet.on("routesfound", async function (e) {
       var route = e.routes[0];
       var tempsDeTrajet = route.summary.totalTime; // Temps de trajet en secondes
       var distanceKm = route.summary.totalDistance / 1000; // distance du trajet en km
       var points = route.coordinates; // tous les points qui composent le trajet
 
       console.log("Points du trajet : " + points.length);
+      const radius = 5; // rayon en kilomètres
+      var bornesProches = [];
+
+      // faire un serveur express proxy qui interroge l'API
+      // OU récupérer le geojson des bornes et faire un serveur express pour ma propre API : https://transport.data.gouv.fr/datasets/fichier-consolide-des-bornes-de-recharge-pour-vehicules-electriques
+      // for (let i = 0; i < points.length; i += 100) {
+      //   const result = await fetchBornesNearPoint(
+      //     points[i].lat,
+      //     points[i].lng,
+      //     radius
+      //   );
+      //   bornesProches.push(result);
+      // }
+      console.log("Bornes proches : " + bornesProches);
+
+      // bornesProches contient maintenant les bornes électriques à proximité de chaque point du trajet
 
       var heures = Math.floor(tempsDeTrajet / 3600);
       var minutes = Math.floor((tempsDeTrajet % 3600) / 60);
