@@ -115,10 +115,10 @@ export default function Map({ villes, giveInfosTrajet }) {
         setBornesIRVE(data.results);
         for (let i = 0; i < data.results.length; i++) {
           let borne = data.results[i];
-          L.marker(
+          /*L.marker(
             [borne.geo_point_borne.lat, borne.geo_point_borne.lon],
             icon_marker_borne
-          ).addTo(mapRef.current);
+          ).addTo(mapRef.current);*/
         }
       })
       .catch((error) => {
@@ -134,12 +134,11 @@ export default function Map({ villes, giveInfosTrajet }) {
     //const proxyUrl = `http://localhost:3001/proxy?lat=${lat}&lon=${lon}&radius=${radius}`;
     const point = "POINT(" + lat + " " + lon + ")";
     const api2Url =
-      "https://odre.opendatasoft.com/api/explore/v2.1/catalog/datasets/bornes-irve/records?limit=20&where=(distance(`geo_point_borne`, geom'" +
+      "https://odre.opendatasoft.com/api/explore/v2.1/catalog/datasets/bornes-irve/records?limit=1&where=(distance(`geo_point_borne`, geom'" +
       point +
       "', " +
       radius +
       "m))";
-
     try {
       const response = await fetch(api2Url);
       if (!response.ok) {
@@ -180,22 +179,34 @@ export default function Map({ villes, giveInfosTrajet }) {
       var points = route.coordinates; // tous les points qui composent le trajet
 
       console.log("Points du trajet : " + points.length);
-      const radius = 5 * 1000; // rayon en kilomètres
+      const radius = 20 * 1000; // rayon en kilomètres
       var bornesProches = [];
 
       // faire un serveur express proxy qui interroge l'API
       // OU récupérer le geojson des bornes et faire un serveur express pour ma propre API : https://transport.data.gouv.fr/datasets/fichier-consolide-des-bornes-de-recharge-pour-vehicules-electriques
-      for (let i = 0; i < points.length; i += 100) {
+      for (let i = 0; i < points.length; i += Math.floor(points.length / 100)) {
         const result = await fetchBornesNearPoint(
           points[i].lat,
           points[i].lng,
           radius
         );
-        bornesProches.push(result);
+        result.results.length > 0 && bornesProches.push(result.results);
+        //console.log(i);
       }
-      console.log("Bornes proches : " + bornesProches.length);
-
-      // bornesProches contient maintenant les bornes électriques à proximité de chaque point du trajet
+      console.log("Bornes proches : " + JSON.stringify(bornesProches));
+      for (let i = 0; i < bornesProches.length; i++) {
+        const borne = bornesProches[i];
+        if (
+          borne[0] !== undefined &&
+          borne[0].ylatitude !== undefined &&
+          borne[0].xlongitude !== undefined
+        ) {
+          L.marker(
+            [borne[0].xlongitude, borne[0].ylatitude],
+            icon_marker_borne
+          ).addTo(mapRef.current);
+        }
+      }
 
       var heures = Math.floor(tempsDeTrajet / 3600);
       var minutes = Math.floor((tempsDeTrajet % 3600) / 60);
