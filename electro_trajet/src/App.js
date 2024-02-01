@@ -1,6 +1,7 @@
 import logo from "./logo.svg";
 import "./App.css";
 import Home from "./pages/homePage";
+//require("dotenv").config();
 
 function App() {
   return (
