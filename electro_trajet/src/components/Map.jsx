@@ -131,9 +131,17 @@ export default function Map({ villes, giveInfosTrajet }) {
    */
   async function fetchBornesNearPoint(lat, lon, radius) {
     const apiUrl = `https://odre.opendatasoft.com/explore/dataset/bornes-irve/api/?disjunctive.region&disjunctive.departement&geofilter.distance=${lat},${lon},${radius}`;
+    //const proxyUrl = `http://localhost:3001/proxy?lat=${lat}&lon=${lon}&radius=${radius}`;
+    const point = "POINT(" + lat + " " + lon + ")";
+    const api2Url =
+      "https://odre.opendatasoft.com/api/explore/v2.1/catalog/datasets/bornes-irve/records?limit=20&where=(distance(`geo_point_borne`, geom'" +
+      point +
+      "', " +
+      radius +
+      "m))";
 
     try {
-      const response = await fetch(apiUrl, { mode: "no-cors" });
+      const response = await fetch(api2Url);
       if (!response.ok) {
         throw new Error(`Erreur de l'API: ${response.status}`);
       }
@@ -172,20 +180,20 @@ export default function Map({ villes, giveInfosTrajet }) {
       var points = route.coordinates; // tous les points qui composent le trajet
 
       console.log("Points du trajet : " + points.length);
-      const radius = 5; // rayon en kilomètres
+      const radius = 5 * 1000; // rayon en kilomètres
       var bornesProches = [];
 
       // faire un serveur express proxy qui interroge l'API
       // OU récupérer le geojson des bornes et faire un serveur express pour ma propre API : https://transport.data.gouv.fr/datasets/fichier-consolide-des-bornes-de-recharge-pour-vehicules-electriques
-      // for (let i = 0; i < points.length; i += 100) {
-      //   const result = await fetchBornesNearPoint(
-      //     points[i].lat,
-      //     points[i].lng,
-      //     radius
-      //   );
-      //   bornesProches.push(result);
-      // }
-      console.log("Bornes proches : " + bornesProches);
+      for (let i = 0; i < points.length; i += 100) {
+        const result = await fetchBornesNearPoint(
+          points[i].lat,
+          points[i].lng,
+          radius
+        );
+        bornesProches.push(result);
+      }
+      console.log("Bornes proches : " + bornesProches.length);
 
       // bornesProches contient maintenant les bornes électriques à proximité de chaque point du trajet
 
