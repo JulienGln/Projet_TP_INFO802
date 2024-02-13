@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Select from "react-select";
 
-export default function FormTrajet({ giveCoordsToMap, tempsTrajet }) {
+export default function FormTrajet({ giveCoordsToMap, infosTrajet }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [searchTermB, setSearchTermB] = useState("");
@@ -379,11 +379,13 @@ export default function FormTrajet({ giveCoordsToMap, tempsTrajet }) {
             }}
             options={optionsVehicules}
             onChange={handleVehiculeChange}
+            isDisabled={disableInputs}
             className="shadow-sm"
           />
         </div>
         {vehicule && (
           <img
+            className="img-thumbnail rounded mb-2"
             src={
               vehicules.find((car) => car.id === vehicule).media.image
                 .thumbnail_url
@@ -427,10 +429,48 @@ export default function FormTrajet({ giveCoordsToMap, tempsTrajet }) {
           </div>
         </>
       )}
-      <div className={"mt-3" + (tempsTrajet ? "" : " placeholder-glow")}>
-        <p className={"fw-bold" + (tempsTrajet ? "" : " placeholder")}>
-          Temps de trajet : {tempsTrajet}h
+      <div className={"mt-3" + (infosTrajet ? "" : " placeholder-glow")}>
+        <p className={"fw-bold" + (infosTrajet ? "" : " placeholder")}>
+          {"Temps de trajet : "}
+          {infosTrajet &&
+            (parseFloat(infosTrajet.temps_trajet) >= 1.0
+              ? parseFloat(infosTrajet.temps_trajet).toFixed(2) + " h"
+              : (parseFloat(infosTrajet.temps_trajet) * 60).toFixed(0) +
+                " min")}
         </p>
+        {infosTrajet && (
+          <>
+            <a
+              data-bs-toggle="collapse"
+              href="#infosTrajetPlus"
+              role="button"
+              aria-expanded="false"
+              aria-controls="infosTrajetPlus"
+            >
+              Voir plus d'informations
+            </a>
+            <div className="collapse" id="infosTrajetPlus">
+              <div className="card card-body">
+                <ul className="list-group">
+                  <li className="list-group-item">
+                    Autonomie : {infosTrajet.autonomie} km
+                  </li>
+                  <li className="list-group-item">
+                    Temps de charge complète :{" "}
+                    {parseFloat(infosTrajet.tps_chargement).toFixed(2)} h
+                  </li>
+                  <li className="list-group-item">
+                    Distance : {parseFloat(infosTrajet.distance).toFixed(2)} km
+                  </li>
+                  <li className="list-group-item">
+                    Vitesse moyenne :{" "}
+                    {parseFloat(infosTrajet.vitesse_moyenne).toFixed(2)} km/h
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
