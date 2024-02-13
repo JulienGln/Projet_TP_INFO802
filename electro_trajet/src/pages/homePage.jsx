@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Map from "../components/Map";
 import FormTrajet from "../components/FormTrajet";
 //import * as SOAP from "soap";
+import axios from "axios";
 
 export default function Home() {
   const [selectedCoordinates, setSelectedCoordinates] = useState(null);
@@ -18,15 +19,61 @@ export default function Home() {
     setInfosTrajet(data);
 
     // appel à SOAP ...
+    console.log("\nSOAP ! Au secours !");
     const url = "http://127.0.0.1:8000?wsdl";
 
     const puissance_borne = 11; // champ "puiss_max" de l'API Borne IRVE
     const args = {
       distance: data.distance,
       autonomie: data.vehicule.range.chargetrip_range.worst,
-      vitesse_moyenne: data.vitesseMoyenne,
+      vitesse_moyenne: parseFloat(data.vitesseMoyenne),
       tps_chargement: data.vehicule.battery.usable_kwh / puissance_borne, // en heures
     };
+
+    console.log(args);
+
+    fetch("http://localhost:3001/soap-proxy", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(args),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Réponse du service SOAP :", data);
+      })
+      .catch((error) => {
+        console.error("Erreur :", error);
+      });
+
+    //     const xmls = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:spy="spyne.examples.trajet">
+    //    <soapenv:Header/>
+    //    <soapenv:Body>
+    //       <spy:calcul_trajet>
+    //          <spy:distance>${data.distance}</spy:distance>
+    //          <spy:autonomie>${
+    //            data.vehicule.range.chargetrip_range.worst
+    //          }</spy:autonomie>
+    //          <spy:vitesse_moyenne>${data.vitesseMoyenne}</spy:vitesse_moyenne>
+    //          <spy:tps_chargement>${
+    //            data.vehicule.battery.usable_kwh / puissance_borne
+    //          }</spy:tps_chargement>
+    //       </spy:calcul_trajet>
+    //    </soapenv:Body>
+    // </soapenv:Envelope>`;
+
+    //     axios
+    //       .post("http://127.0.0.1:8000/", xmls, {
+    //         headers: { "Content-Type": "text/xml" },
+    //       })
+    //       .then((res) => {
+    //         console.log("Status: ", res.status);
+    //         console.log("Body: ", res.data);
+    //       })
+    //       .catch((err) => {
+    //         console.log("Error: ", err);
+    //       });
 
     /*SOAP.createClient(url, (err, client) => {
       if (err) {
