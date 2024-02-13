@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Select from "react-select";
 
-export default function FormTrajet({ giveCoordsToMap }) {
-  const [tempsTrajet, setTempsTrajet] = useState(0);
+export default function FormTrajet({ giveCoordsToMap, tempsTrajet }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [searchTermB, setSearchTermB] = useState("");
@@ -11,8 +10,8 @@ export default function FormTrajet({ giveCoordsToMap }) {
   const [coordsVilleB, setCoordsVilleB] = useState(null);
   const [optionsVilles, setOptionsVilles] = useState([]);
   const [optionsVehicules, setOptionsVehicules] = useState([]);
-  const [vehicules, setVehicules] = useState([]);
-  const [vehicule, setVehicule] = useState(null);
+  const [vehicules, setVehicules] = useState([]); // les véhicules fournies via graphQL et leurs infos
+  const [vehicule, setVehicule] = useState(null); // le véhicule choisi dans le select du formulaire (id + nom)
   const [isVillesLoading, setIsVillesLoading] = useState(true);
   const [isVehiclesLoading, setIsVehiclesLoading] = useState(true);
   const [hasErrors, setHasErrors] = useState(false);
@@ -383,6 +382,16 @@ export default function FormTrajet({ giveCoordsToMap }) {
             className="shadow-sm"
           />
         </div>
+        {vehicule && (
+          <img
+            src={
+              vehicules.find((car) => car.id === vehicule).media.image
+                .thumbnail_url
+            }
+            alt="un véhicule électrique"
+          />
+        )}
+        <br />
         <button
           className="btn btn-success shadow-sm"
           type="submit"
@@ -418,7 +427,11 @@ export default function FormTrajet({ giveCoordsToMap }) {
           </div>
         </>
       )}
-      <p className="fw-bold">Temps de trajet : {tempsTrajet}</p>
+      <div className={"mt-3" + (tempsTrajet ? "" : " placeholder-glow")}>
+        <p className={"fw-bold" + (tempsTrajet ? "" : " placeholder")}>
+          Temps de trajet : {tempsTrajet}h
+        </p>
+      </div>
     </div>
   );
 }

@@ -55,8 +55,16 @@ app.post("/soap-proxy", async (req, res) => {
     xml2js
       .parseStringPromise(response.data)
       .then(function (result) {
-        console.log(result);
-        res.json(result);
+        // Accéder à la valeur du temps de trajet
+        const temps_trajet =
+          result["soap11env:Envelope"]["soap11env:Body"][0][
+            "tns:calcul_trajetResponse"
+          ][0]["tns:calcul_trajetResult"][0];
+
+        console.log("Temps de trajet :", temps_trajet);
+        res.json({ temps_trajet: temps_trajet });
+        // console.log(result);
+        // res.json(result);
       })
       .catch(function (err) {
         console.error("Erreur lors de la conversion du XML en JSON :", err);
