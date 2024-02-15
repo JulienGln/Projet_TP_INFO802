@@ -25,7 +25,7 @@ class TrajetService(ServiceBase):
         if distance < autonomie:
             return distance / vitesse_moyenne
         else:
-            nb_chargements = distance // autonomie
+            nb_chargements = distance / autonomie
             return (nb_chargements * tps_chargement) + (distance / vitesse_moyenne)
 
 application = Application([TrajetService],
