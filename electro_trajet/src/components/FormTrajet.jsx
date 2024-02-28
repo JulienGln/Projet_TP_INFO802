@@ -13,7 +13,6 @@ export default function FormTrajet({ giveCoordsToMap, infosTrajet }) {
   const [vehicules, setVehicules] = useState([]); // les véhicules fournies via graphQL et leurs infos
   const [vehicule, setVehicule] = useState(null); // le véhicule choisi dans le select du formulaire (id + nom)
   const [isVillesLoading, setIsVillesLoading] = useState(true);
-  const [isVehiclesLoading, setIsVehiclesLoading] = useState(true);
   const [hasErrors, setHasErrors] = useState(false);
   const [infoTrouPaume, setInfoTrouPaume] = useState(false);
   const [disableInputs, setDisableInputs] = useState(false); // lorsque la map est affichée, les inputs sont désactivées
@@ -38,7 +37,6 @@ export default function FormTrajet({ giveCoordsToMap, infosTrajet }) {
   function formatageVehicules(vehicules) {
     var res = [];
     for (let i = 0; i < vehicules.length; i++) {
-      //vehicules[i].population >= 3000 && // si on veut limiter aux plus grandes vehicules
       res.push({
         value: vehicules[i].id,
         label: vehicules[i].naming.make + " " + vehicules[i].naming.model,
@@ -212,41 +210,6 @@ export default function FormTrajet({ giveCoordsToMap, infosTrajet }) {
         setVehicules(data.data.vehicleList),
           formatageVehicules(data.data.vehicleList);
       });
-    /*const fetchData = async () => {
-      try {
-        const headers = {
-          //Replace this x-client-id and app-id with your own to get access to more vehicles
-          "x-client-id": "5ed1175bad06853b3aa1e492",
-          "x-app-id": "623998b2c35130073829b2d2",
-          //"x-client-id": "65aa81e90117350bae37ad07",
-          //"x-app-id": "65aa81e90117350bae37ad09",
-        };
-        const apiUrl = "https://api.chargetrip.io/graphql";
-
-        const response = await axios.get(apiUrl, {
-          headers: headers,
-        });
-
-        setoptionsVehicules(response.data);
-      } catch (err) {
-        console.log(err);
-        setIsVehiclesLoading(true);
-      } finally {
-        setIsVehiclesLoading(false);
-      }
-    };
-
-    fetchData();*/
-    /*clientQL
-      .query({ query: GET_ELECTRIC_VEHICLES })
-      .then((result) => {
-        setoptionsVehicules(result.data.electricVehicles);
-        setIsVehiclesLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
-        setIsVehiclesLoading(true);
-      });*/
   }, []);
 
   return (
@@ -411,23 +374,15 @@ export default function FormTrajet({ giveCoordsToMap, infosTrajet }) {
         </div>
       )}
       {infoTrouPaume && (
-        <>
-          {/*<div className="alert alert-info mt-4 mx-5 d-flex align-items-center shadow-sm" role="alert">
-            Attention : Les coordonnées que vous avez entrées correspondent à un
-            lieu isolé ou peu connu. Il se peut que les résultats de la
-            recherche soient imprécis ou erronés. Veuillez vérifier la validité
-            des données avant de les utiliser. Merci de votre compréhension.
-      </div>*/}
-          <div
-            className="alert alert-info mt-4 mx-5 d-flex align-items-center shadow-sm"
-            role="alert"
-          >
-            Attention : Vous avez tapé les coordonnées d’un bled paumé où même
-            les mouches ne vont pas. Il y a de fortes chances que les résultats
-            soient bidons ou à côté de la plaque. Ne faites pas confiance aux
-            données sans les vérifier. C’est pas de ma faute, c’est la vôtre.
-          </div>
-        </>
+        <div
+          className="alert alert-info mt-4 mx-5 d-flex align-items-center shadow-sm"
+          role="alert"
+        >
+          Attention : Les coordonnées que vous avez entrées correspondent à un
+          lieu isolé ou peu connu. Il se peut que les résultats de la recherche
+          soient imprécis ou erronés. Veuillez vérifier la validité des données
+          avant de les utiliser. Merci de votre compréhension.
+        </div>
       )}
       <div className={"mt-3" + (infosTrajet ? "" : " placeholder-glow")}>
         <p className={"fw-bold" + (infosTrajet ? "" : " placeholder")}>
