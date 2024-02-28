@@ -172,8 +172,8 @@ export default function FormTrajet({ giveCoordsToMap, infosTrajet }) {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        "x-client-id": "5ed1175bad06853b3aa1e492",
-        "x-app-id": "623998b2c35130073829b2d2",
+        "x-client-id": process.env.REACT_APP_CHARGETRIP_CLIENT_ID,
+        "x-app-id": process.env.REACT_APP_CHARGETRIP_APP_ID,
       },
       body: JSON.stringify({
         query: `query vehicleList {

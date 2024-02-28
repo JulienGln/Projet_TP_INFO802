@@ -211,7 +211,6 @@ export default function Map({ villes, giveInfosTrajet }) {
       var vitesse_moyenne = distanceKm / (heures + minutes / 60);
 
       giveInfosTrajet({
-        temps: tempsDeTrajet,
         distance: distanceKm,
         vitesseMoyenne: vitesse_moyenne.toPrecision(4),
         vehicule: villes.vehicule,
