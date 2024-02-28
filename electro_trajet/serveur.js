@@ -1,6 +1,7 @@
 const express = require("express");
 const axios = require("axios");
 const xml2js = require("xml2js");
+const fs = require("fs");
 const cors = require("cors");
 //import fetch from "node-fetch";
 
@@ -13,13 +14,20 @@ app.use(express.json());
 app.get("/proxy", async (req, res) => {
   const { lat, lon, radius } = req.query;
 
-  const apiUrl = `https://odre.opendatasoft.com/explore/dataset/bornes-irve/api/?disjunctive.region&disjunctive.departement&geofilter.distance=${lat},${lon},${radius}`;
+  //const apiUrl = `https://odre.opendatasoft.com/explore/dataset/bornes-irve/api/?disjunctive.region&disjunctive.departement&geofilter.distance=${lat},${lon},${radius}`;
+  const point = "POINT(" + lat + " " + lon + ")";
+  const apiUrl =
+    "https://odre.opendatasoft.com/api/explore/v2.1/catalog/datasets/bornes-irve/records?limit=1&where=(distance(`geo_point_borne`, geom'" +
+    point +
+    "', " +
+    radius +
+    "m))";
 
   try {
     const response = await fetch(apiUrl);
     const data = await response.json();
-    console.log(response);
-    console.log(data);
+    // console.log(response);
+    // console.log(data);
     res.json(data);
   } catch (error) {
     console.error(
@@ -76,6 +84,56 @@ app.post("/soap-proxy", async (req, res) => {
   }
 });
 
+app.get("/local-proxy", async (req, res) => {
+  const { lat, lon, radius } = req.query;
+
+  try {
+    // Lire le fichier JSON
+    const data = JSON.parse(
+      fs.readFileSync(
+        "C:\\Users\\julie\\Downloads\\consolidation-etalab-schema-irve-statique-v-2.2.1-20240201.json",
+        "utf8"
+      )
+    );
+
+    // Filtrer les bornes proches
+    const bornesProches = data.features.filter((feature) => {
+      const [lonBorne, latBorne] = feature.geometry.coordinates;
+      const distance = getDistanceFromLatLonInKm(lat, lon, latBorne, lonBorne);
+      return distance <= radius;
+    });
+    res.json(bornesProches);
+  } catch (error) {
+    console.error(
+      "Erreur lors de la récupération des bornes électriques :",
+      error
+    );
+    res
+      .status(500)
+      .send("Erreur lors de la récupération des bornes électriques");
+  }
+});
+
 app.listen(port, () => {
   console.log(`Serveur proxy en cours d'exécution sur le port ${port}`);
 });
+
+// Fonction pour calculer la distance entre deux points géographiques
+function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+  const R = 6371; // Rayon de la terre en km
+  const dLat = deg2rad(lat2 - lat1);
+  const dLon = deg2rad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(deg2rad(lat1)) *
+      Math.cos(deg2rad(lat2)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const d = R * c; // Distance en km
+  return d;
+}
+
+function deg2rad(deg) {
+  return deg * (Math.PI / 180);
+}

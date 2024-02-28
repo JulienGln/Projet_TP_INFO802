@@ -21,7 +21,6 @@ export default function Map({ villes, giveInfosTrajet }) {
   };
   const icon_marker_borne = {
     icon: L.icon({
-      //iconUrl: "./../../img/electro_trajet_ico_1.png",
       iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
       iconSize: [25, 41],
     }),
@@ -33,7 +32,6 @@ export default function Map({ villes, giveInfosTrajet }) {
   useEffect(() => {
     if (!mapRef.current) {
       mapRef.current = L.map("map", { zoom: 5 }).setView(
-        //[45.583223, 5.909299],
         [
           (villes.villeA.lat + villes.villeB.lat) / 2,
           (villes.villeA.lon + villes.villeB.lon) / 2,
@@ -55,9 +53,9 @@ export default function Map({ villes, giveInfosTrajet }) {
       tileLayer.addTo(mapRef.current);
     }
 
-    // Ajoutez un écouteur d'événements pour le zoom
+    // Ajout d'un écouteur d'événements pour le zoom
     mapRef.current.on("zoomend", function () {
-      // Ajustez la taille de la carte après le zoom
+      // Ajuster la taille de la carte après le zoom
       mapRef.current.invalidateSize();
     });
   }, []);
@@ -130,17 +128,16 @@ export default function Map({ villes, giveInfosTrajet }) {
    * Récupère les bornes prêt d'un point (lat, lon), dans un rayon en km donné (radius)
    */
   async function fetchBornesNearPoint(lat, lon, radius) {
-    const apiUrl = `https://odre.opendatasoft.com/explore/dataset/bornes-irve/api/?disjunctive.region&disjunctive.departement&geofilter.distance=${lat},${lon},${radius}`;
     //const proxyUrl = `http://localhost:3001/proxy?lat=${lat}&lon=${lon}&radius=${radius}`;
     const point = "POINT(" + lat + " " + lon + ")";
-    const api2Url =
+    const apiUrl =
       "https://odre.opendatasoft.com/api/explore/v2.1/catalog/datasets/bornes-irve/records?limit=1&where=(distance(`geo_point_borne`, geom'" +
       point +
       "', " +
       radius +
       "m))";
     try {
-      const response = await fetch(api2Url);
+      const response = await fetch(apiUrl);
       if (!response.ok) {
         throw new Error(`Erreur de l'API: ${response.status}`);
       }
@@ -179,7 +176,7 @@ export default function Map({ villes, giveInfosTrajet }) {
       var points = route.coordinates; // tous les points qui composent le trajet
 
       console.log("Points du trajet : " + points.length);
-      const radius = 20 * 1000; // rayon en kilomètres
+      const radius = 30 * 1000; // rayon en kilomètres
       var bornesProches = [];
 
       // faire un serveur express proxy qui interroge l'API
@@ -190,10 +187,10 @@ export default function Map({ villes, giveInfosTrajet }) {
           points[i].lng,
           radius
         );
-        result.results.length > 0 && bornesProches.push(result.results);
+        if (result.results.length > 0) bornesProches.push(result.results);
         //console.log(i);
       }
-      console.log("Bornes proches : " + JSON.stringify(bornesProches));
+      //console.log("Bornes proches : " + JSON.stringify(bornesProches));
       for (let i = 0; i < bornesProches.length; i++) {
         const borne = bornesProches[i];
         if (
@@ -222,24 +219,6 @@ export default function Map({ villes, giveInfosTrajet }) {
     });
 
     trajet.addTo(mapRef.current);
-
-    /*fetch(apiUrl, { method: "GET" })
-      .then((response) => response.json())
-      .then((data) => {
-        const routePoints = data.features[0].geometry.coordinates.map((coord) =>
-          L.latLng(coord[1], coord[0])
-        );
-
-        // Maintenant, routePoints contient la liste de points intermédiaires
-        // Vous pouvez utiliser ces points pour afficher le trajet sur votre carte Leaflet
-        const route = L.polyline(routePoints, { color: "blue" }).addTo(
-          mapRef.current
-        );
-        mapRef.current.fitBounds(route.getBounds());
-      })
-      .catch((error) =>
-        console.error("Erreur lors de la récupération des directions:", error)
-      );*/
   }
 
   return (

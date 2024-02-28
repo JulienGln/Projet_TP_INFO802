@@ -228,9 +228,6 @@ export default function FormTrajet({ giveCoordsToMap, infosTrajet }) {
                 onChange={handleSearchChange}
                 value={searchTerm}
                 disabled={disableInputs}
-                style={{
-                  width: "150%",
-                }}
               />
               <label htmlFor="villeA">Départ</label>
               <ul
@@ -281,7 +278,6 @@ export default function FormTrajet({ giveCoordsToMap, infosTrajet }) {
                 onChange={handleSearchBChange}
                 value={searchTermB}
                 disabled={disableInputs}
-                style={{ width: "150%" }}
               />
               <label htmlFor="villeB">Arrivée</label>
               <ul
