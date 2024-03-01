@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import Select from "react-select";
 
 export default function FormTrajet({ giveCoordsToMap, infosTrajet }) {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [searchTermB, setSearchTermB] = useState("");
-  const [searchResultsB, setSearchResultsB] = useState([]);
+  const [searchTerm, setSearchTerm] = useState(""); // texte de l'input de la ville de départ
+  const [searchResults, setSearchResults] = useState([]); // résultats de l'API des communes en rapport avec searchTerm
+  const [searchTermB, setSearchTermB] = useState(""); // texte de l'input de la ville d'arrivée
+  const [searchResultsB, setSearchResultsB] = useState([]); // résultats de l'API des communes en rapport avec searchTermB
   const [coordsVilleA, setCoordsVilleA] = useState(null); // coordonnées ville A et B
   const [coordsVilleB, setCoordsVilleB] = useState(null);
   const [optionsVilles, setOptionsVilles] = useState([]);
@@ -72,13 +72,16 @@ export default function FormTrajet({ giveCoordsToMap, infosTrajet }) {
     setVehicule(event.value);
   }
 
+  /**
+   * Recherche les coordonnées d'une ville avec une API du gouvernement
+   * @param {string} position "départ" ou "arrivée"
+   */
   function handleChangeCoordsVille(position) {
     if (position === "départ") {
       const apiUrl = `https://api-adresse.data.gouv.fr/search/?q=${searchTerm}&type=municipality&limit=1`;
       fetch(apiUrl)
         .then((response) => response.json())
         .then((data) => {
-          // Vérifiez si des résultats ont été retournés
           if (data.features.length > 0) {
             const firstResult = data.features[0];
             const coords = firstResult.geometry.coordinates;
@@ -92,7 +95,6 @@ export default function FormTrajet({ giveCoordsToMap, infosTrajet }) {
               setInfoZoneRurale(false);
             }
 
-            // console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
             setCoordsVilleA({ lat: latitude, lon: longitude });
           } else {
             console.log("Aucun résultat trouvé pour la ville spécifiée.");
@@ -107,7 +109,6 @@ export default function FormTrajet({ giveCoordsToMap, infosTrajet }) {
       fetch(apiUrl)
         .then((response) => response.json())
         .then((data) => {
-          // Vérifiez si des résultats ont été retournés
           if (data.features.length > 0) {
             const firstResult = data.features[0];
             const coords = firstResult.geometry.coordinates;
@@ -121,7 +122,6 @@ export default function FormTrajet({ giveCoordsToMap, infosTrajet }) {
               setInfoZoneRurale(false);
             }
 
-            // console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
             setCoordsVilleB({ lat: latitude, lon: longitude });
           } else {
             console.log("Aucun résultat trouvé pour la ville spécifiée.");
@@ -151,12 +151,12 @@ export default function FormTrajet({ giveCoordsToMap, infosTrajet }) {
     }
   }
 
+  // Récupération des communes de France
   useEffect(() => {
     // fetch("https://geo.api.gouv.fr/departements/73/communes") => pour tester
     fetch("https://geo.api.gouv.fr/communes")
       .then((response) => response.json())
       .then((data) => {
-        //setOptionsVilles(data);
         formatageVilles(data);
         setIsVillesLoading(false); // Les données sont récupérées, on met isLoading à false
       })

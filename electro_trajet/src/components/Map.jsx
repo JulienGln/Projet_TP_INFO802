@@ -1,15 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-// import Openrouteservice from "openrouteservice-js";
 import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-routing-machine";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 
 export default function Map({ villes, giveInfosTrajet }) {
-  // const orsDirections = new Openrouteservice.Directions({
-  //   api_key: "Votre clé API",
-  // });
-
   const mapRef = useRef(null); // éviter de s'afficher plusieurs fois
   const [bornesIRVE, setBornesIRVE] = useState([]);
 
@@ -102,7 +97,7 @@ export default function Map({ villes, giveInfosTrajet }) {
   }
 
   /**
-   * Récupère des bornes électriques sur le trajet
+   * Récupère des bornes électriques
    */
   function fetchBornesIRVE() {
     fetch(
@@ -153,11 +148,6 @@ export default function Map({ villes, giveInfosTrajet }) {
   }
 
   function fetchTrajet() {
-    // Utiliser l'API Directions de OpenRouteService
-    //const apiKey = "5b3ce3597851110001cf62482c9e7f7bfca24259965f3fbafb3fba43";
-    //const apiUrl = `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${apiKey}&start=${villes.villeA.lon},${villes.villeA.lat}&end=${villes.villeB.lon},${villes.villeB.lat}`;
-
-    // Ajouter le contrôle Leaflet Routing Machine
     var trajet = L.routing.control({
       waypoints: [
         L.latLng(villes.villeA.lat, villes.villeA.lon),
@@ -169,6 +159,7 @@ export default function Map({ villes, giveInfosTrajet }) {
       draggableWaypoints: false,
     });
 
+    // Dès qu'un itinéraire est trouvé :
     trajet.on("routesfound", async function (e) {
       var route = e.routes[0];
       var tempsDeTrajet = route.summary.totalTime; // Temps de trajet en secondes
@@ -179,8 +170,7 @@ export default function Map({ villes, giveInfosTrajet }) {
       const radius = 30 * 1000; // rayon en kilomètres
       var bornesProches = [];
 
-      // faire un serveur express proxy qui interroge l'API
-      // OU récupérer le geojson des bornes et faire un serveur express pour ma propre API : https://transport.data.gouv.fr/datasets/fichier-consolide-des-bornes-de-recharge-pour-vehicules-electriques
+      // Récupération des bornes tous les 100 points du trajet
       for (let i = 0; i < points.length; i += Math.floor(points.length / 100)) {
         const result = await fetchBornesNearPoint(
           points[i].lat,
@@ -188,9 +178,9 @@ export default function Map({ villes, giveInfosTrajet }) {
           radius
         );
         if (result.results.length > 0) bornesProches.push(result.results);
-        //console.log(i);
       }
-      //console.log("Bornes proches : " + JSON.stringify(bornesProches));
+
+      // Ajout des bornes sur la carte
       for (let i = 0; i < bornesProches.length; i++) {
         const borne = bornesProches[i];
         if (
@@ -207,9 +197,9 @@ export default function Map({ villes, giveInfosTrajet }) {
 
       var heures = Math.floor(tempsDeTrajet / 3600);
       var minutes = Math.floor((tempsDeTrajet % 3600) / 60);
-
       var vitesse_moyenne = distanceKm / (heures + minutes / 60);
 
+      // Transmission des infos à homePage.jsx pour appel à SOAP
       giveInfosTrajet({
         distance: distanceKm,
         vitesseMoyenne: vitesse_moyenne.toPrecision(4),
