@@ -14,7 +14,7 @@ export default function FormTrajet({ giveCoordsToMap, infosTrajet }) {
   const [vehicule, setVehicule] = useState(null); // le véhicule choisi dans le select du formulaire (id + nom)
   const [isVillesLoading, setIsVillesLoading] = useState(true);
   const [hasErrors, setHasErrors] = useState(false);
-  const [infoTrouPaume, setInfoTrouPaume] = useState(false);
+  const [infoZoneRurale, setInfoZoneRurale] = useState(false);
   const [disableInputs, setDisableInputs] = useState(false); // lorsque la map est affichée, les inputs sont désactivées
 
   /**
@@ -87,9 +87,9 @@ export default function FormTrajet({ giveCoordsToMap, infosTrajet }) {
             const longitude = coords[0];
 
             if (firstResult.properties.population < 1000) {
-              setInfoTrouPaume(true);
+              setInfoZoneRurale(true);
             } else {
-              setInfoTrouPaume(false);
+              setInfoZoneRurale(false);
             }
 
             // console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
@@ -100,6 +100,7 @@ export default function FormTrajet({ giveCoordsToMap, infosTrajet }) {
         })
         .catch((error) => {
           console.error("Erreur lors de la requête API Adresse", error);
+          setInfoZoneRurale(true);
         });
     } else if (position === "arrivée") {
       const apiUrl = `https://api-adresse.data.gouv.fr/search/?q=${searchTermB}&type=municipality&limit=1`;
@@ -115,9 +116,9 @@ export default function FormTrajet({ giveCoordsToMap, infosTrajet }) {
             const longitude = coords[0];
 
             if (firstResult.properties.population < 1000) {
-              setInfoTrouPaume(true);
+              setInfoZoneRurale(true);
             } else {
-              setInfoTrouPaume(false);
+              setInfoZoneRurale(false);
             }
 
             // console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
@@ -128,6 +129,7 @@ export default function FormTrajet({ giveCoordsToMap, infosTrajet }) {
         })
         .catch((error) => {
           console.error("Erreur lors de la requête API Adresse", error);
+          setInfoZoneRurale(true);
         });
     }
   }
@@ -137,7 +139,7 @@ export default function FormTrajet({ giveCoordsToMap, infosTrajet }) {
     // transmission des coordonnées à la map une fois les deux villes renseignées
     if (coordsVilleA && coordsVilleB) {
       setHasErrors(false);
-      setInfoTrouPaume(false);
+      setInfoZoneRurale(false);
       setDisableInputs(true);
       giveCoordsToMap({
         villeA: coordsVilleA,
@@ -224,7 +226,11 @@ export default function FormTrajet({ giveCoordsToMap, infosTrajet }) {
                 type="search"
                 autoComplete="off"
                 placeholder="Départ"
-                className="form-control shadow-sm border border-bottom-0"
+                className={`form-control shadow-sm ${
+                  searchTerm === "" || searchResults.length > 0
+                    ? searchResults.length > 0 && "is-invalid"
+                    : "is-valid"
+                }`}
                 onChange={handleSearchChange}
                 value={searchTerm}
                 disabled={disableInputs}
@@ -274,7 +280,11 @@ export default function FormTrajet({ giveCoordsToMap, infosTrajet }) {
                 type="search"
                 autoComplete="off"
                 placeholder="Arrivée"
-                className="form-control shadow-sm border border-bottom-0"
+                className={`form-control shadow-sm ${
+                  searchTermB === "" || searchResultsB.length > 0
+                    ? searchResultsB.length > 0 && "is-invalid"
+                    : "is-valid"
+                }`}
                 onChange={handleSearchBChange}
                 value={searchTermB}
                 disabled={disableInputs}
@@ -369,7 +379,7 @@ export default function FormTrajet({ giveCoordsToMap, infosTrajet }) {
           Les données des villes ne sont pas correctes
         </div>
       )}
-      {infoTrouPaume && (
+      {infoZoneRurale && (
         <div
           className="alert alert-info mt-4 mx-5 d-flex align-items-center shadow-sm"
           role="alert"
