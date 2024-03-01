@@ -6,7 +6,6 @@ import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 
 export default function Map({ villes, giveInfosTrajet }) {
   const mapRef = useRef(null); // éviter de s'afficher plusieurs fois
-  const [bornesIRVE, setBornesIRVE] = useState([]);
 
   const icon_marker = {
     icon: L.icon({
@@ -66,13 +65,6 @@ export default function Map({ villes, giveInfosTrajet }) {
   }, [mapRef.current]);
 
   /**
-   * Récupérer les bornes électriques
-   */
-  useEffect(() => {
-    fetchBornesIRVE();
-  }, []);
-
-  /**
    * Ajoute à la carte les marqueurs de départ et d'arrivée
    * @param mapRef la carte
    */
@@ -94,29 +86,6 @@ export default function Map({ villes, giveInfosTrajet }) {
     // Ajuster la vue pour inclure les deux marqueurs
     const bounds = L.latLngBounds(latlngs);
     mapRef.current.fitBounds(bounds);
-  }
-
-  /**
-   * Récupère des bornes électriques
-   */
-  function fetchBornesIRVE() {
-    fetch(
-      "https://odre.opendatasoft.com/api/explore/v2.1/catalog/datasets/bornes-irve/records?limit=100"
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        setBornesIRVE(data.results);
-        for (let i = 0; i < data.results.length; i++) {
-          let borne = data.results[i];
-          /*L.marker(
-            [borne.geo_point_borne.lat, borne.geo_point_borne.lon],
-            icon_marker_borne
-          ).addTo(mapRef.current);*/
-        }
-      })
-      .catch((error) => {
-        console.error("Erreur lors de la récupération des données :", error);
-      });
   }
 
   /**

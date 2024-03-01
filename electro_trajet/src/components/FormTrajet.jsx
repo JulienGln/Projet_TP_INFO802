@@ -40,7 +40,6 @@ export default function FormTrajet({ giveCoordsToMap, infosTrajet }) {
       res.push({
         value: vehicules[i].id,
         label: vehicules[i].naming.make + " " + vehicules[i].naming.model,
-        //+` [${vehicules[i].naming.chargetrip_version}]`,
       });
     }
     setOptionsVehicules(res);
@@ -77,61 +76,38 @@ export default function FormTrajet({ giveCoordsToMap, infosTrajet }) {
    * @param {string} position "départ" ou "arrivée"
    */
   function handleChangeCoordsVille(position) {
-    if (position === "départ") {
-      const apiUrl = `https://api-adresse.data.gouv.fr/search/?q=${searchTerm}&type=municipality&limit=1`;
-      fetch(apiUrl)
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.features.length > 0) {
-            const firstResult = data.features[0];
-            const coords = firstResult.geometry.coordinates;
+    const query = position === "départ" ? searchTerm : searchTermB;
+    const apiUrl = `https://api-adresse.data.gouv.fr/search/?q=${query}&type=municipality&limit=1`;
 
-            const latitude = coords[1];
-            const longitude = coords[0];
+    fetch(apiUrl)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.features.length > 0) {
+          const firstResult = data.features[0];
+          const coords = firstResult.geometry.coordinates;
 
-            if (firstResult.properties.population < 1000) {
-              setInfoZoneRurale(true);
-            } else {
-              setInfoZoneRurale(false);
-            }
+          const latitude = coords[1];
+          const longitude = coords[0];
 
+          if (firstResult.properties.population < 1000) {
+            setInfoZoneRurale(true);
+          } else {
+            setInfoZoneRurale(false);
+          }
+
+          if (position === "départ") {
             setCoordsVilleA({ lat: latitude, lon: longitude });
           } else {
-            console.log("Aucun résultat trouvé pour la ville spécifiée.");
-          }
-        })
-        .catch((error) => {
-          console.error("Erreur lors de la requête API Adresse", error);
-          setInfoZoneRurale(true);
-        });
-    } else if (position === "arrivée") {
-      const apiUrl = `https://api-adresse.data.gouv.fr/search/?q=${searchTermB}&type=municipality&limit=1`;
-      fetch(apiUrl)
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.features.length > 0) {
-            const firstResult = data.features[0];
-            const coords = firstResult.geometry.coordinates;
-
-            const latitude = coords[1];
-            const longitude = coords[0];
-
-            if (firstResult.properties.population < 1000) {
-              setInfoZoneRurale(true);
-            } else {
-              setInfoZoneRurale(false);
-            }
-
             setCoordsVilleB({ lat: latitude, lon: longitude });
-          } else {
-            console.log("Aucun résultat trouvé pour la ville spécifiée.");
           }
-        })
-        .catch((error) => {
-          console.error("Erreur lors de la requête API Adresse", error);
-          setInfoZoneRurale(true);
-        });
-    }
+        } else {
+          console.log("Aucun résultat trouvé pour la ville spécifiée.");
+        }
+      })
+      .catch((error) => {
+        console.error("Erreur lors de la requête API Adresse", error);
+        setInfoZoneRurale(true);
+      });
   }
 
   function handleSubmitForm(event) {
