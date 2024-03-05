@@ -33,14 +33,27 @@ L'application est divisée en trois parties :
 
 - #### Serveur proxy
     Le serveur proxy (`serveur.js`), écrit en JavaScript avec Express, **contient une route** pour l'appel à l'**API SOAP**. Les **informations** du trajet et du véhicules sont **envoyées en JSON** au serveur, qui les **insère** dans une **enveloppe XML**, qui l'envoie au programme Python, et qui **récupère la réponse** XML de ce programme pour ensuite **reconvertir en JSON les données** et les transmettre à l'application.
+
+    Une route pour récupérer les véhicules électriques avec l'API GraphQL est aussi présente. (cf. le [dépôt serveur](https://github.com/JulienGln/serverElectroTrajet.git) pour plus de détails)
 - #### API SOAP
     Le programme contenant l'API SOAP est écrit en Python (`temps_trajet_SOAP.py`).
 
-### Instructions de démarrage
+### Instructions de démarrage (en local)
 1. Se placer dans le répertoire `electro_trajet`
 2. Lancer le programme `temps_trajet_SOAP.py`
 3. Lancer le serveur proxy `serveur.js` avec la commande **`node serveur.js`**
 4. Lancer l'application avec **`npm start`**
+
+### Instructions de démarrage (en ligne)
+1. Se rendre à l'adresse de l'[application](https://orange-island-082d39903.4.azurestaticapps.net) ou du [serveur](https://electro-trajet-server.azurewebsites.net/) (redirection automatique vers l'application)
+
+### Déploiement
+Pour déployer mon application dans sa totalité, j'ai dû utiliser deux services de cloud, en intégration continue sur 3 dépôts GitHub à l'aide des GitHub Actions.
+- Vercel :
+    - Pour le service SOAP : https://github.com/JulienGln/soapElectroTrajet.git
+- Azure :
+    - Pour l'application React : https://github.com/JulienGln/reactElectroTrajet.git
+    - Pour le serveur : https://github.com/JulienGln/serverElectroTrajet.git
 
 ### Liens API
 - [Communes de France](https://geo.api.gouv.fr/communes)
