@@ -1,6 +1,10 @@
 # Projet_TP_INFO802
 ## Galerne Julien
 
+Ceci est le dépôt qui était utilisé pour faire tourner l'application en local. Le README présent ici permet d'expliquer comment fonctionne les différents composants de l'application.
+
+cf. les différents dépôts dans la partie [Déploiement](#déploiement)
+
 ### Scénario
 L’utilisateur choisit son véhicule dans une liste, il entre un trajet entre deux villes.
 L’application lui indique les villes dans lesquelles il devra s’arrêter pour recharger son véhicule
@@ -25,7 +29,7 @@ L'application est divisée en trois parties :
     Le **front** est écrit avec **React**.
     
     La page d'accueil, `src/pages/homePage.jsx`, est composée de deux composants `src/components` :
-    - `FormTrajet.jsx` : C'est le formulaire à remplir, contenant les informations des villes de départ et d'arrivée ainsi que le véhicule sélectionné. Les appels **API** aux services du gouvernement pour renseigner les **communes** et obtenir leurs **positions GPS**, de même que l'appel à l'**API GraphQL** pour les **véhicules**, sont également présentes dans ce composant. Une fois le formulaire validé, le composant **transmet** à `homePage.jsx` les **coordonnées des villes** ainsi que la **fiche technique du véhicule**.
+    - `FormTrajet.jsx` : C'est le formulaire à remplir, contenant les informations des villes de départ et d'arrivée ainsi que le véhicule sélectionné. Les appels **API** aux services du gouvernement pour renseigner les **communes** et obtenir leurs **positions GPS**, de même que l'appel à l'**API GraphQL** pour les **véhicules** (UNIQUEMENT EN LOCAL SINON, APPEL A L'[API DU SERVEUR](https://github.com/JulienGln/reactElectroTrajet.git)), sont également présentes dans ce composant. Une fois le formulaire validé, le composant **transmet** à `homePage.jsx` les **coordonnées des villes** ainsi que la **fiche technique du véhicule**.
 
     - `Map.jsx` : Ce composant contient la carte de la France, affichée avec *Leaflet*. Il **récupère** les **données fournies par le formulaire**, via la `homePage.jsx`, puis **trace le trajet** sur la carte. Ensuite, l'**API** qui répertorie les **bornes électriques**, **est appelée** non pas sur l'ensemble des points qui composent le trajet, mais **tous les 100 points** environ afin d'optimiser les performances et pour avoir un délai d'attente raisonnable. **Cet appel** se charge, pour un point donné, de **récupérer la borne la plus proche** dans un **rayon de 30 km**. Une fois les bornes pertinentes récupérées, elles sont placées sur la carte.
 
